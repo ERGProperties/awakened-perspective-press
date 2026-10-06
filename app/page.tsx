@@ -110,11 +110,11 @@ export default function AwakenedPerspectivePressPage() {
           </nav>
 
           <a
-            href="/contact"
-            className="rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700"
-          >
-            Talk With Us
-          </a>
+  href="/publishing-packages"
+  className="rounded-full bg-stone-900 px-5 py-3 text-sm font-bold text-white transition hover:bg-stone-700"
+>
+  Find Your Publishing Path
+</a>
         </div>
       </header>
 

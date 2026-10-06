@@ -13,6 +13,7 @@ export async function POST(request: Request) {
       phone,
       bookTitle,
       stage,
+      path,
       genre,
       message,
     } = data;
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
           <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Book Title:</strong> ${bookTitle || "Not provided"}</p>
           <p><strong>Stage:</strong> ${stage || "Not provided"}</p>
+          <p><strong>Publishing Path:</strong> ${path || "Not provided"}</p>
           <p><strong>Genre:</strong> ${genre || "Not provided"}</p>
 
           <hr style="border: 0; border-top: 1px solid #ddd; margin: 24px 0;" />

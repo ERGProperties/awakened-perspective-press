@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, Mail } from "lucide-react";
 
 export default function ContactPage() {
@@ -22,6 +23,7 @@ export default function ContactPage() {
       phone: formData.get("phone"),
       bookTitle: formData.get("bookTitle"),
       stage: formData.get("stage"),
+      path: formData.get("path"),
       genre: formData.get("genre"),
       message: formData.get("message"),
     };
@@ -62,7 +64,7 @@ export default function ContactPage() {
       <main className="min-h-screen bg-[#fbfaf7] text-stone-900">
         <header className="border-b border-stone-200 bg-[#fbfaf7]">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-            <a href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <svg
                 aria-hidden="true"
                 viewBox="0 0 92 58"
@@ -122,15 +124,15 @@ export default function ContactPage() {
                   Perspective Press
                 </p>
               </div>
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/"
               className="inline-flex items-center gap-2 text-sm font-semibold text-stone-600 transition hover:text-stone-950"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Home
-            </a>
+            </Link>
           </div>
         </header>
 
@@ -150,16 +152,17 @@ export default function ContactPage() {
 
             <p className="mx-auto mt-7 max-w-xl text-lg leading-8 text-stone-600">
               We received your information and will review it personally.
-              Awakened Perspective Press will be in touch soon.
+              Awakened Perspective Press will be in touch soon to learn more
+              about your book and discuss the best path forward.
             </p>
 
-            <a
+            <Link
               href="/"
               className="mt-10 inline-flex items-center justify-center rounded-full bg-stone-900 px-7 py-4 font-bold text-white transition hover:bg-stone-700"
             >
               Return Home
               <ArrowRight className="ml-3 h-5 w-5" />
-            </a>
+            </Link>
           </div>
         </section>
       </main>
@@ -170,7 +173,7 @@ export default function ContactPage() {
     <main className="min-h-screen bg-[#fbfaf7] text-stone-900">
       <header className="border-b border-stone-200 bg-[#fbfaf7]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <a href="/" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <svg
               aria-hidden="true"
               viewBox="0 0 92 58"
@@ -230,15 +233,15 @@ export default function ContactPage() {
                 Perspective Press
               </p>
             </div>
-          </a>
+          </Link>
 
-          <a
-            href="/"
+          <Link
+            href="/publishing-packages"
             className="inline-flex items-center gap-2 text-sm font-semibold text-stone-600 transition hover:text-stone-950"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </a>
+            Back to Publishing
+          </Link>
         </div>
       </header>
 
@@ -246,7 +249,7 @@ export default function ContactPage() {
         <div className="mx-auto grid max-w-7xl gap-16 px-6 py-20 md:py-28 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.35em] text-amber-700">
-              Start a conversation
+              Start your publishing journey
             </p>
 
             <h1 className="mt-5 font-serif text-5xl font-bold leading-tight tracking-tight sm:text-6xl">
@@ -257,22 +260,27 @@ export default function ContactPage() {
             </h1>
 
             <p className="mt-7 max-w-xl text-lg leading-8 text-stone-600">
-              You don&apos;t have to have everything figured out. Tell us where
-              you are in the process, what you&apos;re creating, and what you
-              hope your book can become.
+              You don&apos;t have to have everything figured out. Tell us where you
+              are in the process, what you&apos;re creating, and what you hope your
+              book can become.
             </p>
 
             <div className="mt-10 rounded-3xl bg-[#f1ede4] p-7">
               <BookOpen className="h-7 w-7 text-amber-800" />
 
               <h2 className="mt-5 font-serif text-2xl font-bold">
-                You don&apos;t have to have it all figured out.
+                A conversation before a commitment.
               </h2>
 
               <p className="mt-4 leading-7 text-stone-600">
-                Whether you have a finished manuscript, a collection of ideas,
-                or simply a story you know needs to be told, start there. We can
-                figure out the next steps together.
+                Every author and every book is different. We&apos;ll learn about
+                your project, understand where you are, and discuss the
+                publishing path that makes the most sense for you.
+              </p>
+
+              <p className="mt-4 leading-7 text-stone-600">
+                There is no obligation. This is simply the first step in
+                exploring what may be possible.
               </p>
             </div>
           </div>
@@ -352,6 +360,38 @@ export default function ContactPage() {
                 </div>
               </div>
 
+              <div>
+                <label
+                  htmlFor="path"
+                  className="text-sm font-bold text-stone-800"
+                >
+                  Which publishing path sounds closest to what you need?
+                </label>
+
+                <select
+                  id="path"
+                  name="path"
+                  defaultValue=""
+                  className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
+                >
+                  <option value="" disabled>
+                    Select one
+                  </option>
+                  <option value="Publish">
+                    Publish — Get my book professionally published
+                  </option>
+                  <option value="Launch">
+                    Launch — Publish and build momentum around my book
+                  </option>
+                  <option value="Partner">
+                    Partner — Build my author platform and grow beyond the book
+                  </option>
+                  <option value="Not sure yet">
+                    I&apos;m not sure yet
+                  </option>
+                </select>
+              </div>
+
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
                   <label
@@ -360,6 +400,7 @@ export default function ContactPage() {
                   >
                     Where are you in the process?
                   </label>
+
                   <select
                     id="stage"
                     name="stage"
@@ -392,6 +433,7 @@ export default function ContactPage() {
                   >
                     Genre
                   </label>
+
                   <input
                     id="genre"
                     name="genre"
@@ -409,13 +451,14 @@ export default function ContactPage() {
                 >
                   Tell us about your book *
                 </label>
+
                 <textarea
                   id="message"
                   name="message"
                   required
                   rows={7}
                   className="mt-2 w-full resize-none rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
-                  placeholder="Tell us about your story, your book, where you are in the process, or what you'd like help with."
+                  placeholder="Tell us about your story, your book, where you are in the process, or what you&apos;d like help with."
                 />
               </div>
 
@@ -430,14 +473,16 @@ export default function ContactPage() {
                 disabled={sending}
                 className="group inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-7 py-4 font-bold text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {sending ? "Sending..." : "Send Your Message"}
+                {sending ? "Sending..." : "Start the Conversation"}
+
                 {!sending && (
                   <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
                 )}
               </button>
 
               <p className="text-center text-xs leading-5 text-stone-500">
-                Your information is used only to respond to your inquiry.
+                Your information is used only to review your inquiry and
+                respond to you about your publishing project.
               </p>
             </form>
           </div>
