@@ -10,15 +10,19 @@ export async function POST(request: Request) {
     const {
       name,
       email,
+      phone,
       bookTitle,
       stage,
       genre,
       message,
     } = data;
 
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return NextResponse.json(
-        { error: "Name, email, and message are required." },
+        {
+          error:
+            "Name, email, phone number, and message are required.",
+        },
         { status: 400 }
       );
     }
@@ -34,6 +38,7 @@ export async function POST(request: Request) {
 
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Book Title:</strong> ${bookTitle || "Not provided"}</p>
           <p><strong>Stage:</strong> ${stage || "Not provided"}</p>
           <p><strong>Genre:</strong> ${genre || "Not provided"}</p>

@@ -19,6 +19,7 @@ export default function ContactPage() {
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
+      phone: formData.get("phone"),
       bookTitle: formData.get("bookTitle"),
       stage: formData.get("stage"),
       genre: formData.get("genre"),
@@ -291,6 +292,7 @@ export default function ContactPage() {
                     name="name"
                     type="text"
                     required
+                    autoComplete="name"
                     className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                     placeholder="Your name"
                   />
@@ -308,26 +310,46 @@ export default function ContactPage() {
                     name="email"
                     type="email"
                     required
+                    autoComplete="email"
                     className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                     placeholder="you@example.com"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label
-                  htmlFor="bookTitle"
-                  className="text-sm font-bold text-stone-800"
-                >
-                  Book Title
-                </label>
-                <input
-                  id="bookTitle"
-                  name="bookTitle"
-                  type="text"
-                  className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
-                  placeholder="Working title, if you have one"
-                />
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="text-sm font-bold text-stone-800"
+                  >
+                    Phone Number *
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    autoComplete="tel"
+                    inputMode="tel"
+                    className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="bookTitle"
+                    className="text-sm font-bold text-stone-800"
+                  >
+                    Book Title
+                  </label>
+                  <input
+                    id="bookTitle"
+                    name="bookTitle"
+                    type="text"
+                    className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
+                    placeholder="Working title, if you have one"
+                  />
+                </div>
               </div>
 
               <div className="grid gap-6 sm:grid-cols-2">
