@@ -147,18 +147,18 @@ export default function AwakenedPerspectivePressPage() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
-                href="/contact"
-                className="group inline-flex items-center justify-center rounded-full bg-stone-900 px-7 py-4 font-bold text-white transition hover:bg-stone-700"
-              >
-                Tell Us About Your Book
-                <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
-              </a>
+  href="/publishing-packages"
+  className="group inline-flex items-center justify-center rounded-full bg-stone-900 px-7 py-4 font-bold text-white transition hover:bg-stone-700"
+>
+  Find Your Publishing Path
+  <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
+</a>
 
               <a
                 href="#services"
                 className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-7 py-4 font-bold text-stone-800 transition hover:border-stone-500"
               >
-                Explore Publishing Services
+                How We Can Help
               </a>
             </div>
 
@@ -189,6 +189,14 @@ export default function AwakenedPerspectivePressPage() {
                       has a story.
                     </span>
                   </p>
+
+                  <div className="mt-10 flex justify-center">
+                    <img
+                      src="/app-logo-hero.png"
+                      alt="Awakened Perspective Press logo"
+                      className="h-auto w-28 opacity-95 sm:w-32"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -335,6 +343,39 @@ export default function AwakenedPerspectivePressPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* PUBLISHING PATH BRIDGE */}
+      <section className="bg-[#fbfaf7] py-20 md:py-24">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.35em] text-amber-700">
+            Your publishing journey
+          </p>
+
+          <h2 className="mt-5 font-serif text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            Every author starts somewhere.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-stone-600">
+            Maybe you have an idea. Maybe your manuscript is finished. Maybe
+            you&apos;ve already published and you&apos;re wondering what comes
+            next.
+          </p>
+
+          <p className="mx-auto mt-5 max-w-2xl font-serif text-2xl italic text-stone-800">
+            Your book is unique. Your publishing path should be too.
+          </p>
+
+          <div className="mt-9">
+            <a
+              href="/publishing-packages"
+              className="group inline-flex items-center justify-center rounded-full bg-stone-900 px-8 py-4 font-bold text-white transition hover:bg-stone-700"
+            >
+              Explore Your Publishing Path
+              <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
+            </a>
           </div>
         </div>
       </section>
@@ -536,13 +577,25 @@ export default function AwakenedPerspectivePressPage() {
           </p>
 
           <div className="mt-10 flex justify-center">
-            <a
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-amber-300 px-8 py-4 font-black text-stone-950 transition hover:bg-amber-200"
-            >
-              Start a Conversation
-              <ArrowRight className="ml-3 h-5 w-5" />
-            </a>
+            <div className="flex flex-col items-center gap-4">
+  <a
+    href="/publishing-packages"
+    className="inline-flex items-center justify-center rounded-full bg-amber-300 px-8 py-4 font-black text-stone-950 transition hover:bg-amber-200"
+  >
+    Find Your Publishing Path
+    <ArrowRight className="ml-3 h-5 w-5" />
+  </a>
+
+  <p className="text-sm text-stone-400">
+    Already know what you need?{" "}
+    <a
+      href="/contact"
+      className="font-semibold text-amber-300 transition hover:text-amber-200"
+    >
+      Start a Conversation →
+    </a>
+  </p>
+</div>
           </div>
 
           <div className="mt-16 border-t border-white/10 pt-8">
