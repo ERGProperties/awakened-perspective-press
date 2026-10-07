@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,8 +63,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "Awakened Perspective Press",
-    description:
-      "Your Story. Your Voice. Your Book.",
+    description: "Your Story. Your Voice. Your Book.",
     url: "https://awakenedperspectivepress.com",
     siteName: "Awakened Perspective Press",
     type: "website",
@@ -72,8 +72,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Awakened Perspective Press",
-    description:
-      "Your Story. Your Voice. Your Book.",
+    description: "Your Story. Your Voice. Your Book.",
   },
 };
 
@@ -87,7 +86,25 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        {children}
+
+        {/* Google Ads Tag */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18497917004"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-ads-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-18497917004');
+          `}
+        </Script>
+      </body>
     </html>
   );
 }
