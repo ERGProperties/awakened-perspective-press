@@ -4,6 +4,16 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, Mail } from "lucide-react";
 
+declare global {
+  interface Window {
+    gtag?: (
+      command: string,
+      action: string,
+      params?: Record<string, unknown>
+    ) => void;
+  }
+}
+
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -43,6 +53,13 @@ export default function ContactPage() {
         throw new Error(
           result.error || "Something went wrong. Please try again."
         );
+      }
+
+      // Google Ads conversion: successful lead form submission
+      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: "AW-18497917004/ZcleCLvLrZMdEMygv_RE",
+        });
       }
 
       setSubmitted(true);
@@ -260,9 +277,9 @@ export default function ContactPage() {
             </h1>
 
             <p className="mt-7 max-w-xl text-lg leading-8 text-stone-600">
-              You don&apos;t have to have everything figured out. Tell us where you
-              are in the process, what you&apos;re creating, and what you hope your
-              book can become.
+              You don&apos;t have to have everything figured out. Tell us where
+              you are in the process, what you&apos;re creating, and what you
+              hope your book can become.
             </p>
 
             <div className="mt-10 rounded-3xl bg-[#f1ede4] p-7">
@@ -273,8 +290,8 @@ export default function ContactPage() {
               </h2>
 
               <p className="mt-4 leading-7 text-stone-600">
-                Every author and every book is different. We&apos;ll learn about
-                your project, understand where you are, and discuss the
+                Every author and every book is different. We&apos;ll learn
+                about your project, understand where you are, and discuss the
                 publishing path that makes the most sense for you.
               </p>
 
@@ -458,7 +475,7 @@ export default function ContactPage() {
                   required
                   rows={7}
                   className="mt-2 w-full resize-none rounded-2xl border border-stone-300 bg-white px-4 py-3 outline-none transition focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
-                  placeholder="Tell us about your story, your book, where you are in the process, or what you&apos;d like help with."
+                  placeholder="Tell us about your story, your book, where you are in the process, or what you'd like help with."
                 />
               </div>
 
