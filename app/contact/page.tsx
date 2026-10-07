@@ -11,6 +11,11 @@ declare global {
       action: string,
       params?: Record<string, unknown>
     ) => void;
+    fbq?: (
+      command: string,
+      eventName: string,
+      params?: Record<string, unknown>
+    ) => void;
   }
 }
 
@@ -56,10 +61,21 @@ export default function ContactPage() {
       }
 
       // Google Ads conversion: successful lead form submission
-      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      if (
+        typeof window !== "undefined" &&
+        typeof window.gtag === "function"
+      ) {
         window.gtag("event", "conversion", {
           send_to: "AW-18497917004/ZcleCLvLrZMdEMygv_RE",
         });
+      }
+
+      // Meta conversion: successful lead form submission
+      if (
+        typeof window !== "undefined" &&
+        typeof window.fbq === "function"
+      ) {
+        window.fbq("track", "Lead");
       }
 
       setSubmitted(true);
