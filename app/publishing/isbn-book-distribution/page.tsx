@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "ISBNs & Book Distribution: A Guide for Authors",
+  title: "ISBNs & Book Distribution for Authors",
   description:
     "Learn how ISBNs work, how book editions are identified, and how authors can approach distribution through KDP, IngramSpark, bookstores, libraries, and online retailers.",
   keywords: [

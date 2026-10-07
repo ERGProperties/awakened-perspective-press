@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Book Publishing Services: What Authors Actually Need",
+  title: "Book Publishing Services for Authors",
   description:
     "Explore book publishing services for authors, from manuscript development and editing to cover design, ISBNs, distribution, book marketing, and author platform development.",
   keywords: [

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Self-Publishing a Book: What Authors Need to Know",
+  title: "Self-Publishing a Book: Author Guide",
   description:
     "Learn how self-publishing works, from manuscript preparation and ISBNs to book formatting, distribution, marketing, and building an author platform.",
   keywords: [

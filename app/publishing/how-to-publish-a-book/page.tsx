@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How to Publish a Book: A Modern Author&apos;s Guide",
+  title: "How to Publish a Book: Author Guide",
   description:
     "Learn how to publish a book from manuscript to marketplace. Explore traditional publishing, self-publishing, ISBNs, KDP, IngramSpark, book marketing, distribution, and author platform strategies.",
   keywords: [
