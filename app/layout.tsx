@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
+import StructuredData from "@/components/StructuredData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,24 +15,61 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://awakenedperspectivepress.com"),
+
   title: {
-    default: "Awakened Perspective Press",
+    default:
+      "Awakened Perspective Press | Publishing Support for Authors",
     template: "%s | Awakened Perspective Press",
   },
+
   description:
-    "Awakened Perspective Press helps authors turn their stories, ideas, and experiences into professionally published books—and bring those books to the world.",
+    "Awakened Perspective Press helps authors navigate the journey from manuscript to professionally published book, with publishing guidance, self-publishing support, ISBN and distribution assistance, book marketing, and author launch services.",
+
   keywords: [
+    "Awakened Perspective Press",
     "book publishing",
+    "publishing services",
+    "publishing company",
     "self publishing",
+    "self-publishing help",
     "author services",
+    "author publishing services",
     "book publishing services",
     "book marketing",
-    "author platform",
-    "Awakened Perspective Press",
+    "book launch",
+    "author marketing",
+    "ISBN services",
+    "book distribution",
+    "independent publishing",
+    "AI-assisted publishing",
   ],
-  authors: [{ name: "Awakened Perspective Press" }],
+
+  authors: [
+    {
+      name: "Awakened Perspective Press",
+      url: "https://awakenedperspectivepress.com",
+    },
+  ],
+
   creator: "Awakened Perspective Press",
-  metadataBase: new URL("https://awakenedperspectivepress.com"),
+  publisher: "Awakened Perspective Press",
+
+  alternates: {
+    canonical: "https://awakenedperspectivepress.com",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 
   icons: {
     icon: [
@@ -62,17 +100,22 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 
   openGraph: {
-    title: "Awakened Perspective Press",
-    description: "Your Story. Your Voice. Your Book.",
+    type: "website",
     url: "https://awakenedperspectivepress.com",
     siteName: "Awakened Perspective Press",
-    type: "website",
+    title:
+      "Awakened Perspective Press | Publishing Support for Authors",
+    description:
+      "Your Story. Your Voice. Your Book. Publishing guidance, self-publishing support, marketing, distribution, and author launch services.",
+    locale: "en_US",
   },
 
   twitter: {
     card: "summary",
-    title: "Awakened Perspective Press",
-    description: "Your Story. Your Voice. Your Book.",
+    title:
+      "Awakened Perspective Press | Publishing Support for Authors",
+    description:
+      "Your Story. Your Voice. Your Book. Publishing guidance, self-publishing support, marketing, distribution, and author launch services.",
   },
 };
 
@@ -87,6 +130,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col">
+        <StructuredData />
+
         {children}
 
         {/* Google Ads Tag */}
@@ -102,6 +147,30 @@ export default function RootLayout({
             gtag('js', new Date());
 
             gtag('config', 'AW-18497917004');
+          `}
+        </Script>
+
+        {/* Meta Pixel */}
+        <Script id="meta-pixel" strategy="afterInteractive">
+          {`
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;
+            n.push=n;
+            n.loaded=!0;
+            n.version='2.0';
+            n.queue=[];
+            t=b.createElement(e);
+            t.async=!0;
+            t.src=v;
+            s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)
+            }(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+
+            fbq('init', '1387213283129142');
+            fbq('track', 'PageView');
           `}
         </Script>
       </body>
