@@ -97,7 +97,7 @@ const questions = [
   {
     question: "Can authors who used AI work with a publishing service?",
     answer:
-      "Yes. AI can be part of a modern author's workflow. The important consideration is the quality, originality, accuracy, and human direction behind the finished work. At Awakened Perspective Press, the philosophy is Human voice. AI assistance. Professional publishing.",
+      "Yes. AI can be part of a modern author&apos;s workflow. The important consideration is the quality, originality, accuracy, and human direction behind the finished work. At Awakened Perspective Press, the philosophy is Human voice. AI assistance. Professional publishing.",
   },
 ];
 
@@ -300,18 +300,18 @@ export default function BookPublishingServicesPage() {
             </p>
 
             <p>
-  Professional publishing services exist to help answer those
-  questions and turn a manuscript into a finished book with a
-  strategy behind it. That can include everything from manuscript
-  development and design to{" "}
-  <Link
-    href="/publishing/isbn-book-distribution"
-    className="font-semibold text-amber-800 underline decoration-amber-800/30 underline-offset-4 transition hover:text-amber-700"
-  >
-    ISBN and book distribution
-  </Link>
-  .
-</p>
+              Professional publishing services exist to help answer those
+              questions and turn a manuscript into a finished book with a
+              strategy behind it. That can include everything from manuscript
+              development and design to{" "}
+              <Link
+                href="/publishing/isbn-book-distribution"
+                className="font-semibold text-amber-800 underline decoration-amber-800/30 underline-offset-4 transition hover:text-amber-700"
+              >
+                ISBN and book distribution
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>
@@ -477,6 +477,16 @@ export default function BookPublishingServicesPage() {
               <p className="mt-5 max-w-xl text-lg font-semibold leading-8 text-stone-800">
                 Human voice. AI assistance. Professional publishing.
               </p>
+
+              <div className="mt-8">
+                <Link
+                  href="/publishing/ai-and-authors"
+                  className="group inline-flex items-center font-bold text-stone-900 transition hover:text-amber-800"
+                >
+                  Read our AI &amp; Authors guide
+                  <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
 
             <div className="rounded-[2rem] border border-stone-300 bg-white p-8 shadow-xl sm:p-10">
