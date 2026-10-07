@@ -368,16 +368,23 @@ export default function AwakenedPerspectivePressPage() {
             Your book is unique. Your publishing path should be too.
           </p>
 
-          <div className="mt-9">
-            <a
-              href="/publishing-packages"
-              className="group inline-flex items-center justify-center rounded-full bg-stone-900 px-8 py-4 font-bold text-white transition hover:bg-stone-700"
-            >
-              Explore Your Publishing Path
-              <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
-            </a>
-          </div>
-        </div>
+          <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+  <a
+    href="/publishing-packages"
+    className="group inline-flex items-center justify-center rounded-full bg-stone-900 px-8 py-4 font-bold text-white transition hover:bg-stone-700"
+  >
+    Explore Your Publishing Path
+    <ArrowRight className="ml-3 h-5 w-5 transition group-hover:translate-x-1" />
+  </a>
+
+  <a
+    href="/publishing/how-to-publish-a-book"
+    className="inline-flex items-center justify-center rounded-full border border-stone-300 bg-white px-8 py-4 font-bold text-stone-800 transition hover:border-stone-500"
+  >
+    Read the Publishing Guide
+  </a>
+</div>        
+</div>
       </section>
 
       {/* AI */}
