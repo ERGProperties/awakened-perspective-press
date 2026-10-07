@@ -524,66 +524,89 @@ export default function IsbnBookDistributionPage() {
       </section>
 
       {/* RELATED GUIDES */}
-      <section className="bg-white py-24 md:py-32">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.35em] text-amber-700">
-              Continue learning
-            </p>
+<section className="bg-white py-24 md:py-32">
+  <div className="mx-auto max-w-5xl px-6">
+    <div className="text-center">
+      <p className="text-sm font-bold uppercase tracking-[0.35em] text-amber-700">
+        Continue learning
+      </p>
 
-            <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-5xl">
-              Build the rest of your publishing plan.
-            </h2>
-          </div>
+      <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-5xl">
+        Build the rest of your publishing plan.
+      </h2>
+    </div>
 
-          <div className="mt-14 grid gap-5 md:grid-cols-2">
-            <Link
-              href="/publishing/how-to-publish-a-book"
-              className="group rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8 transition hover:-translate-y-1 hover:border-stone-400"
-            >
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-700">
-                Publishing guide
-              </p>
+    <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <Link
+        href="/publishing/how-to-publish-a-book"
+        className="group rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8 transition hover:-translate-y-1 hover:border-stone-400"
+      >
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-700">
+          Publishing guide
+        </p>
 
-              <h3 className="mt-4 text-2xl font-bold">
-                How to Publish a Book
-              </h3>
+        <h3 className="mt-4 text-2xl font-bold">
+          How to Publish a Book
+        </h3>
 
-              <p className="mt-4 leading-7 text-stone-600">
-                Explore the complete journey from manuscript to marketplace.
-              </p>
+        <p className="mt-4 leading-7 text-stone-600">
+          Explore the complete journey from manuscript to marketplace.
+        </p>
 
-              <span className="mt-6 inline-flex items-center font-bold text-stone-900">
-                Read the guide
-                <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
-              </span>
-            </Link>
+        <span className="mt-6 inline-flex items-center font-bold text-stone-900">
+          Read the guide
+          <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
+        </span>
+      </Link>
 
-            <Link
-              href="/publishing/self-publishing"
-              className="group rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8 transition hover:-translate-y-1 hover:border-stone-400"
-            >
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-700">
-                Self-publishing
-              </p>
+      <Link
+        href="/publishing/self-publishing"
+        className="group rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8 transition hover:-translate-y-1 hover:border-stone-400"
+      >
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-700">
+          Self-publishing
+        </p>
 
-              <h3 className="mt-4 text-2xl font-bold">
-                Self-Publishing a Book
-              </h3>
+        <h3 className="mt-4 text-2xl font-bold">
+          Self-Publishing a Book
+        </h3>
 
-              <p className="mt-4 leading-7 text-stone-600">
-                Learn how self-publishing works and which pieces authors need
-                to consider.
-              </p>
+        <p className="mt-4 leading-7 text-stone-600">
+          Learn how self-publishing works and which pieces authors need
+          to consider.
+        </p>
 
-              <span className="mt-6 inline-flex items-center font-bold text-stone-900">
-                Read the guide
-                <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
+        <span className="mt-6 inline-flex items-center font-bold text-stone-900">
+          Read the guide
+          <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
+        </span>
+      </Link>
+
+      <Link
+        href="/publishing/book-publishing-services"
+        className="group rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8 transition hover:-translate-y-1 hover:border-stone-400"
+      >
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-700">
+          Author services
+        </p>
+
+        <h3 className="mt-4 text-2xl font-bold">
+          Book Publishing Services
+        </h3>
+
+        <p className="mt-4 leading-7 text-stone-600">
+          Explore the professional services that can help take a manuscript
+          to a finished book.
+        </p>
+
+        <span className="mt-6 inline-flex items-center font-bold text-stone-900">
+          Explore services
+          <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
+        </span>
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* FAQ */}
       <section className="bg-[#fbfaf7] py-24 md:py-32">

@@ -300,10 +300,18 @@ export default function BookPublishingServicesPage() {
             </p>
 
             <p>
-              Professional publishing services exist to help answer those
-              questions and turn a manuscript into a finished book with a
-              strategy behind it.
-            </p>
+  Professional publishing services exist to help answer those
+  questions and turn a manuscript into a finished book with a
+  strategy behind it. That can include everything from manuscript
+  development and design to{" "}
+  <Link
+    href="/publishing/isbn-book-distribution"
+    className="font-semibold text-amber-800 underline decoration-amber-800/30 underline-offset-4 transition hover:text-amber-700"
+  >
+    ISBN and book distribution
+  </Link>
+  .
+</p>
           </div>
         </div>
       </section>

@@ -295,11 +295,18 @@ export default function SelfPublishingPage() {
             </p>
 
             <p>
-              But there is an important distinction between <strong>self-publishing</strong>{" "}
-              and <strong>doing everything yourself</strong>. An author can
-              choose the self-publishing path while still working with
-              experienced professionals.
-            </p>
+  But there is an important distinction between <strong>self-publishing</strong>{" "}
+  and <strong>doing everything yourself</strong>. An author can
+  choose the self-publishing path while still working with
+  experienced professionals. Our{" "}
+  <Link
+    href="/publishing/book-publishing-services"
+    className="font-semibold text-amber-800 underline decoration-amber-800/30 underline-offset-4 transition hover:text-amber-700"
+  >
+    book publishing services guide
+  </Link>{" "}
+  explains the areas where professional support can make the process easier.
+</p>
 
             <p>
               The goal is not simply to make a book available. The goal is to
@@ -415,11 +422,18 @@ export default function SelfPublishingPage() {
           </h2>
 
           <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-stone-600">
-            Platforms such as Amazon KDP and IngramSpark can be important
-            pieces of a self-publishing plan. But choosing a platform should
-            come after understanding your goals, formats, distribution needs,
-            and audience.
-          </p>
+  Platforms such as Amazon KDP and IngramSpark can be important
+  pieces of a self-publishing plan. But choosing a platform should
+  come after understanding your goals, formats, distribution needs,
+  and audience. Our{" "}
+  <Link
+    href="/publishing/isbn-book-distribution"
+    className="font-semibold text-amber-800 underline decoration-amber-800/30 underline-offset-4 transition hover:text-amber-700"
+  >
+    ISBN and book distribution guide
+  </Link>{" "}
+  goes deeper into those decisions.
+</p>
 
           <div className="mt-12 grid gap-5 text-left md:grid-cols-2">
             <div className="rounded-3xl border border-stone-200 bg-[#fbfaf7] p-8">
