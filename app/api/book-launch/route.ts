@@ -1,5 +1,9 @@
+
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { prisma } from "@/lib/prisma";
+
+export const runtime = "nodejs";
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => {
@@ -10,6 +14,7 @@ function escapeHtml(value: string) {
       '"': "&quot;",
       "'": "&#39;",
     };
+
     return entities[character];
   });
 }
@@ -20,13 +25,18 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const name = String(formData.get("name") ?? "").trim();
-    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const email = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
     const consent = formData.get("consent") === "yes";
     const website = String(formData.get("website") ?? "").trim();
 
-    // Honeypot field: silently reject likely automated submissions.
+    // Silently reject likely automated submissions.
     if (website) {
-      return NextResponse.redirect(new URL("/book-launch/thank-you", origin), 303);
+      return NextResponse.redirect(
+        new URL("/book-launch/thank-you", origin),
+        303
+      );
     }
 
     if (
@@ -36,12 +46,46 @@ export async function POST(request: Request) {
       email.length > 254 ||
       !consent
     ) {
-      return NextResponse.redirect(new URL("/book-launch?error=invalid", origin), 303);
+      return NextResponse.redirect(
+        new URL("/book-launch?error=invalid", origin),
+        303
+      );
     }
 
+    // Save the reader before sending any notification email.
+    const existingReader = await prisma.reader.findUnique({
+      where: { email },
+    });
+
+    if (existingReader) {
+      // Do not duplicate records or silently re-consent an existing reader.
+      // A previously opted-out reader can contact the press to resubscribe.
+      return NextResponse.redirect(
+        new URL("/book-launch/thank-you", origin),
+        303
+      );
+    }
+
+    await prisma.reader.create({
+      data: {
+        name,
+        email,
+        consent: true,
+        consentedAt: new Date(),
+        source: "book-launch",
+      },
+    });
+
+    // Email notification is secondary to saving the signup.
     if (!process.env.RESEND_API_KEY) {
-      console.error("Book launch signup failed: RESEND_API_KEY is not configured.");
-      return NextResponse.redirect(new URL("/book-launch?error=unavailable", origin), 303);
+      console.error(
+        "Reader saved, but RESEND_API_KEY is not configured."
+      );
+
+      return NextResponse.redirect(
+        new URL("/book-launch/thank-you", origin),
+        303
+      );
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -52,7 +96,8 @@ export async function POST(request: Request) {
       from: "Awakened Perspective Press <noreply@awakenedperspectivepress.com>",
       to: ["gary@awakenedperspectivepress.com"],
       replyTo: email,
-      subject: "New Book Launch Signup — Understanding External Reflections",
+      subject:
+        "New Book Launch Signup — Understanding External Reflections",
       html: `
         <div style="font-family:Arial,sans-serif;line-height:1.7;color:#222;max-width:620px;margin:auto">
           <h1 style="color:#102a43">New book launch signup</h1>
@@ -66,13 +111,22 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("Resend book launch signup error:", error);
-      return NextResponse.redirect(new URL("/book-launch?error=unavailable", origin), 303);
+      console.error(
+        "Reader saved, but Resend notification failed:",
+        error
+      );
     }
 
-    return NextResponse.redirect(new URL("/book-launch/thank-you", origin), 303);
+    return NextResponse.redirect(
+      new URL("/book-launch/thank-you", origin),
+      303
+    );
   } catch (error) {
     console.error("Book launch signup route error:", error);
-    return NextResponse.redirect(new URL("/book-launch?error=unavailable", origin), 303);
+
+    return NextResponse.redirect(
+      new URL("/book-launch?error=unavailable", origin),
+      303
+    );
   }
 }
