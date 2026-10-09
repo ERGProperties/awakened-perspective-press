@@ -1,8 +1,25 @@
-"use client";
-
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Check, Mail, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Mail, Sparkles } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Understanding External Reflections | Gary Walker",
+  description:
+    "Explore Understanding External Reflections: An Unorthodox Conversation by Gary Walker. A different perspective on life, reality, and who you really are.",
+  alternates: {
+    canonical: "https://awakenedperspectivepress.com/understanding-external-reflections",
+  },
+  openGraph: {
+    title: "Understanding External Reflections | Gary Walker",
+    description:
+      "A different perspective could change everything. Discover the book by Gary Walker.",
+    url: "https://awakenedperspectivepress.com/understanding-external-reflections",
+    siteName: "Awakened Perspective Press",
+    type: "website",
+    images: [{ url: "/3D%20Image.png", alt: "Understanding External Reflections by Gary Walker" }],
+  },
+};
 
 const questions = [
   "What if the way you see the world is only one way of seeing it?",
