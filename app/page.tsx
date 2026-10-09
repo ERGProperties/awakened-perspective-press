@@ -563,7 +563,7 @@ export default function AwakenedPerspectivePressPage() {
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_1fr]">
           <div className="mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl">
             <img
-              src="/3D%20Image.png"
+              src="/understanding-external-reflections-hero.png"
               alt="Understanding External Reflections by Gary Walker, shown as a hardcover against a sunset ocean"
               className="h-auto w-full rounded-2xl"
             />
