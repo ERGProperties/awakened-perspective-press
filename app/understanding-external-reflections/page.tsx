@@ -46,7 +46,7 @@ export default function UnderstandingExternalReflectionsPage() {
               <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">Perspective Press</p>
             </div>
           </Link>
-          <Link href="/contact?book=Understanding%20External%20Reflections" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200 sm:px-5">
+          <Link href="/book-launch" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200 sm:px-5">
             Follow the Launch <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -80,7 +80,7 @@ export default function UnderstandingExternalReflectionsPage() {
               <a href="#the-conversation" className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-300 px-7 py-4 font-bold text-[#071b33] transition hover:bg-amber-200">
                 Explore the Conversation <ArrowDown className="h-4 w-4" />
               </a>
-              <Link href="/contact?book=Understanding%20External%20Reflections" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-4 font-bold text-white transition hover:border-amber-300 hover:text-amber-200">
+              <Link href="/book-launch" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-4 font-bold text-white transition hover:border-amber-300 hover:text-amber-200">
                 Get Launch Updates <Mail className="h-4 w-4" />
               </Link>
             </div>
@@ -173,7 +173,7 @@ export default function UnderstandingExternalReflectionsPage() {
             If these questions resonate with you, follow the book’s journey. We’ll share publication news and ordering information as the editions become available.
           </p>
           <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/contact?book=Understanding%20External%20Reflections" className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-300 px-7 py-4 font-bold text-[#071b33] transition hover:bg-amber-200">
+            <Link href="/book-launch" className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-300 px-7 py-4 font-bold text-[#071b33] transition hover:bg-amber-200">
               Follow the Launch <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/" className="inline-flex items-center justify-center rounded-full border border-white/25 px-7 py-4 font-bold transition hover:border-amber-300 hover:text-amber-200">
@@ -187,7 +187,7 @@ export default function UnderstandingExternalReflectionsPage() {
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-center text-sm sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <p>© {new Date().getFullYear()} Awakened Perspective Press.</p>
           <p>Ideas for a more conscious, fulfilled life.</p>
-          <Link href="/contact?book=Understanding%20External%20Reflections" className="transition hover:text-amber-200">Contact the Press</Link>
+          <Link href="/book-launch" className="transition hover:text-amber-200">Contact the Press</Link>
         </div>
       </footer>
     </main>
