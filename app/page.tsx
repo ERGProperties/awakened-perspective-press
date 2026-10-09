@@ -558,6 +558,37 @@ export default function AwakenedPerspectivePressPage() {
         </div>
       </section>
 
+      {/* FEATURED BOOK */}
+      <section className="bg-[#071b33] py-20 text-white md:py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[1fr_1fr]">
+          <div className="mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-3 shadow-2xl">
+            <img
+              src="/3D%20Image.png"
+              alt="Understanding External Reflections by Gary Walker, shown as a hardcover against a sunset ocean"
+              className="h-auto w-full rounded-2xl"
+            />
+          </div>
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.3em] text-amber-300">
+              Featured book by Gary Walker
+            </p>
+            <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-5xl">
+              A Different Perspective Could Change Everything.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-stone-300">
+              Discover <em>Understanding External Reflections: An Unorthodox Conversation</em>—an invitation to question familiar assumptions about life, reality, and who you really are.
+            </p>
+            <a
+              href="/understanding-external-reflections"
+              className="mt-8 inline-flex items-center justify-center rounded-full bg-amber-300 px-7 py-4 font-bold text-stone-950 transition hover:bg-amber-200"
+            >
+              Discover the Book
+              <ArrowRight className="ml-3 h-5 w-5" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CONTACT */}
       <section
   id="contact"
