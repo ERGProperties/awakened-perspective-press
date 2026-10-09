@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     url: "https://awakenedperspectivepress.com/understanding-external-reflections",
     siteName: "Awakened Perspective Press",
     type: "website",
-    images: [{ url: "/3D%20Image.png", alt: "Understanding External Reflections by Gary Walker" }],
+    images: [{ url: "/understanding-external-reflections-hero.png", alt: "Understanding External Reflections by Gary Walker" }],
   },
 };
 
@@ -88,7 +88,7 @@ export default function UnderstandingExternalReflectionsPage() {
             <div className="absolute -inset-5 rounded-[3rem] bg-amber-400/15 blur-3xl" />
             <div className="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-black/20 p-2 shadow-2xl shadow-black/40">
               <Image
-                src="/3D%20Image.png"
+                src="/understanding-external-reflections-hero.png"
                 alt="Three-dimensional hardcover mockup of Understanding External Reflections by Gary Walker, against a golden sunset over the ocean"
                 width={1280}
                 height={1280}
