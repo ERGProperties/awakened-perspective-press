@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Mail, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Understanding External Reflections | Gary Walker",
@@ -33,12 +33,17 @@ export default function UnderstandingExternalReflectionsPage() {
       <header className="relative z-10 border-b border-white/10 bg-[#071b33]/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
           <Link href="/" className="flex items-center gap-3" aria-label="Awakened Perspective Press home">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-amber-300/50 bg-amber-300/10">
-              <Sparkles className="h-5 w-5 text-amber-300" />
-            </div>
+            <Image
+              src="/app-logo-hero.png"
+              alt=""
+              width={76}
+              height={48}
+              priority
+              className="h-12 w-[76px] shrink-0 object-contain"
+            />
             <div className="leading-none">
-              <p className="font-serif text-lg font-bold tracking-tight">Awakened</p>
-              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.24em] text-amber-300">Perspective Press</p>
+              <p className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-white">Awakened</p>
+              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">Perspective Press</p>
             </div>
           </Link>
           <Link href="/contact?book=Understanding%20External%20Reflections" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200 sm:px-5">
