@@ -71,6 +71,10 @@ export default function BookLaunchPage() {
             </div>
 
             <form action="/api/book-launch" method="POST" className="grid gap-5">
+              <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+                <label htmlFor="website">Leave this field empty</label>
+                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
               <div>
                 <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-100">First name</label>
                 <input id="name" name="name" type="text" autoComplete="given-name" required maxLength={100} className="w-full rounded-xl border border-white/15 bg-[#071b33] px-4 py-3.5 text-white outline-none transition placeholder:text-slate-500 focus:border-amber-300" placeholder="Your first name" />
