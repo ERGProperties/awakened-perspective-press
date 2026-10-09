@@ -150,8 +150,8 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Meta Pixel */}
-        <Script id="meta-pixel" strategy="afterInteractive">
+        {/* Meta Pixels: Both Publishing Brands */}
+        <Script id="meta-pixels" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -169,10 +169,34 @@ export default function RootLayout({
             }(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
 
+            // Existing Pixel: Awakening Perspective Press
             fbq('init', '1387213283129142');
+
+            // New Pixel: Understanding External Reflections
+            fbq('init', '1057775080418962');
+
+            // Send PageView to both initialized Pixels
             fbq('track', 'PageView');
           `}
         </Script>
+
+        {/* Meta Pixel fallback for browsers without JavaScript */}
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1387213283129142&ev=PageView&noscript=1"
+            alt=""
+          />
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1057775080418962&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
       </body>
     </html>
   );
