@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BookLaunchPage() {
+export default function BookLaunchPage({ searchParams }: { searchParams?: { error?: string } }) {
   return (
     <main className="min-h-screen bg-[#071b33] text-white">
       <header className="border-b border-white/10">
@@ -70,6 +70,16 @@ export default function BookLaunchPage() {
               <p className="mt-2 text-sm leading-6 text-slate-300">Tell us where to send the news when the book is ready.</p>
             </div>
 
+            {searchParams?.error === "invalid" && (
+              <p role="alert" className="rounded-xl border border-red-300/30 bg-red-950/30 p-4 text-sm leading-6 text-red-100">
+                Please enter a valid name and email address, and check the box to receive launch updates.
+              </p>
+            )}
+            {searchParams?.error === "unavailable" && (
+              <p role="alert" className="rounded-xl border border-red-300/30 bg-red-950/30 p-4 text-sm leading-6 text-red-100">
+                We couldn’t process your signup right now. Please try again later or contact the press.
+              </p>
+            )}
             <form action="/api/book-launch" method="POST" className="grid gap-5">
               <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
                 <label htmlFor="website">Leave this field empty</label>
