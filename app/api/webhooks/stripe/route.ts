@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
@@ -10,6 +11,90 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const publisherEmail = "gary@awakenedperspectivepress.com";
+const metaPixelId = "1057775080418962";
+
+function hashEmail(email: string): string {
+  return createHash("sha256")
+    .update(email.trim().toLowerCase())
+    .digest("hex");
+}
+
+async function sendMetaPurchaseEvent({
+  email,
+  sessionId,
+  eventTime,
+}: {
+  email: string;
+  sessionId: string;
+  eventTime: number;
+}): Promise<void> {
+  const accessToken = process.env.META_CONVERSIONS_API_TOKEN;
+
+  if (!accessToken) {
+    console.error("Meta Conversions API token is not configured.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v26.0/${metaPixelId}/events?access_token=${encodeURIComponent(accessToken)}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: [
+            {
+              event_name: "Purchase",
+              event_time: eventTime,
+              event_id: `purchase_${sessionId}`,
+              action_source: "website",
+              event_source_url:
+                "https://www.awakenedperspectivepress.com/book-launch/purchase-success",
+              user_data: {
+                em: [hashEmail(email)],
+              },
+              custom_data: {
+                currency: "USD",
+                value: 7.99,
+                content_name:
+                  "Understanding External Reflections: An Unorthodox Conversation",
+                content_type: "product",
+                content_ids: [
+                  "understanding-external-reflections-ebook",
+                ],
+              },
+            },
+          ],
+        }),
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      const details = await response.text();
+
+      console.error(
+        "Meta Purchase event failed:",
+        response.status,
+        details
+      );
+
+      return;
+    }
+
+    const result = await response.json();
+
+    console.info(
+      "Meta Purchase event accepted:",
+      result.events_received
+    );
+  } catch (error) {
+    // Tracking failures must not interrupt a paid order.
+    console.error("Meta Conversions API request failed:", error);
+  }
+}
 
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
@@ -32,6 +117,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Stripe signature verification failed:", error);
+
     return NextResponse.json(
       { error: "Invalid webhook signature." },
       { status: 400 }
@@ -58,7 +144,12 @@ export async function POST(request: Request) {
     const priceId = process.env.STRIPE_PRICE_ID;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-    if (!email || !priceId || !siteUrl || session.amount_total === null) {
+    if (
+      !email ||
+      !priceId ||
+      !siteUrl ||
+      session.amount_total === null
+    ) {
       throw new Error("Missing required checkout details.");
     }
 
@@ -115,9 +206,15 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send a separate publisher order notification.
-    // The deterministic idempotency key helps prevent duplicate alerts
-    // when Stripe retries this same purchase within Resend's key window.
+    // Send the verified purchase to Meta's Conversions API.
+    // The stable event ID helps identify this specific order.
+    await sendMetaPurchaseEvent({
+      email,
+      sessionId: session.id,
+      eventTime: event.created,
+    });
+
+    // Send the publisher order notification.
     const orderNotice = await resend.emails.send(
       {
         from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
@@ -157,7 +254,10 @@ export async function POST(request: Request) {
         "Publisher order notification failed:",
         orderNotice.error
       );
-      throw new Error("Unable to send publisher order notification.");
+
+      throw new Error(
+        "Unable to send publisher order notification."
+      );
     }
 
     console.info(
@@ -165,7 +265,7 @@ export async function POST(request: Request) {
       session.id
     );
 
-    // Do not resend the customer delivery email if it was already sent.
+    // Do not resend the customer delivery email if already sent.
     if (purchase.emailSentAt) {
       return NextResponse.json({ received: true });
     }
@@ -174,7 +274,9 @@ export async function POST(request: Request) {
       !purchase.downloadTokenHash ||
       !purchase.downloadExpiresAt
     ) {
-      throw new Error("Purchase download authorization is incomplete.");
+      throw new Error(
+        "Purchase download authorization is incomplete."
+      );
     }
 
     const downloadUrl =
@@ -202,7 +304,10 @@ export async function POST(request: Request) {
 
     if (result.error) {
       console.error("Resend delivery email failed:", result.error);
-      throw new Error("Unable to send the eBook delivery email.");
+
+      throw new Error(
+        "Unable to send the eBook delivery email."
+      );
     }
 
     await prisma.purchase.update({
@@ -210,11 +315,15 @@ export async function POST(request: Request) {
       data: { emailSentAt: new Date() },
     });
 
-    console.info("eBook delivery email sent for session:", session.id);
+    console.info(
+      "eBook delivery email sent for session:",
+      session.id
+    );
 
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Stripe webhook processing failed:", error);
+
     return NextResponse.json(
       { error: "Webhook processing failed." },
       { status: 500 }

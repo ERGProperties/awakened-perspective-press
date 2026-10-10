@@ -11,11 +11,7 @@ declare global {
       action: string,
       params?: Record<string, unknown>
     ) => void;
-    fbq?: (
-      command: string,
-      eventName: string,
-      params?: Record<string, unknown>
-    ) => void;
+fbq?: (...args: unknown[]) => void;
   }
 }
 
@@ -71,12 +67,16 @@ export default function ContactPage() {
       }
 
       // Meta conversion: successful lead form submission
-      if (
-        typeof window !== "undefined" &&
-        typeof window.fbq === "function"
-      ) {
-        window.fbq("track", "Lead");
-      }
+if (
+  typeof window !== "undefined" &&
+  typeof window.fbq === "function"
+) {
+  window.fbq(
+    "trackSingle",
+    "1057775080418962",
+    "Lead"
+  );
+}
 
       setSubmitted(true);
     } catch (err) {
