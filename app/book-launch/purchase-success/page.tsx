@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Stripe from "stripe";
+import { prisma } from "@/lib/prisma";
+import { createDownloadToken } from "@/lib/download-token";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +16,7 @@ export default async function PurchaseSuccessPage({
 
   let paid = false;
   let email: string | null = null;
+  let downloadUrl: string | null = null;
 
   if (sessionId && process.env.STRIPE_SECRET_KEY) {
     try {
@@ -28,6 +31,22 @@ export default async function PurchaseSuccessPage({
 
       if (paid) {
         email = session.customer_details?.email ?? null;
+
+        const { token, tokenHash } = createDownloadToken(sessionId);
+
+        const purchase = await prisma.purchase.findUnique({
+          where: { downloadTokenHash: tokenHash },
+        });
+
+        if (
+          purchase &&
+          purchase.paymentStatus === "paid" &&
+          purchase.downloadTokenHash === tokenHash &&
+          purchase.downloadExpiresAt &&
+          purchase.downloadExpiresAt > new Date()
+        ) {
+          downloadUrl = `/api/ebook-download?token=${encodeURIComponent(token)}`;
+        }
       }
     } catch (error) {
       console.error("Unable to verify purchase success page:", error);
@@ -49,18 +68,47 @@ export default async function PurchaseSuccessPage({
 
             <p className="mt-6 text-lg leading-8 text-stone-300">
               Thank you for purchasing{" "}
-              <em>Understanding External Reflections: An Unorthodox Conversation</em>.
+              <em>
+                Understanding External Reflections: An Unorthodox Conversation
+              </em>
+              .
             </p>
 
             <p className="mt-4 leading-7 text-stone-300">
               Your purchase has been confirmed.
-              {email
-                ? ` A download email will be sent to ${email} once delivery is ready.`
-                : " Your delivery email will be sent once delivery is ready."}
             </p>
 
+            {downloadUrl ? (
+              <>
+                <p className="mt-4 leading-7 text-stone-300">
+                  Your eBook is ready. Click below to download your copy.
+                </p>
+
+                <div className="mt-8">
+                  <a
+                    href={downloadUrl}
+                    className="inline-flex rounded-full bg-amber-300 px-8 py-4 text-lg font-bold text-stone-950 transition hover:bg-amber-200"
+                  >
+                    Download Your eBook
+                  </a>
+                </div>
+
+                <p className="mt-5 text-sm leading-6 text-stone-400">
+                  {email
+                    ? `A backup download link has also been sent to ${email}.`
+                    : "Your download email will serve as a backup."}
+                </p>
+              </>
+            ) : (
+              <p className="mt-4 leading-7 text-stone-300">
+                Your download is being prepared. Please refresh this page
+                shortly. If you received a download email, you can also use
+                the link in that message.
+              </p>
+            )}
+
             <p className="mt-6 text-sm leading-6 text-stone-400">
-              If you do not receive your email, please contact us for assistance.
+              If you need assistance, please contact Awakened Perspective Press.
             </p>
           </>
         ) : (
@@ -79,7 +127,7 @@ export default async function PurchaseSuccessPage({
         <div className="mt-10">
           <Link
             href="/"
-            className="inline-flex rounded-full bg-amber-300 px-7 py-3 font-bold text-stone-950 transition hover:bg-amber-200"
+            className="inline-flex rounded-full border border-white/20 px-7 py-3 font-bold text-white transition hover:bg-white/10"
           >
             Return to Awakened Perspective Press
           </Link>

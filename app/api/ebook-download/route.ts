@@ -23,7 +23,9 @@ export async function GET(request: Request) {
     }
 
     const purchase = await prisma.purchase.findUnique({
-      where: { downloadTokenHash: hashDownloadToken(token) },
+      where: {
+        downloadTokenHash: hashDownloadToken(token),
+      },
     });
 
     if (
@@ -41,18 +43,18 @@ export async function GET(request: Request) {
 
     if (!publicId) {
       console.error("Cloudinary EPUB public ID is not configured.");
+
       return new NextResponse("Download temporarily unavailable.", {
         status: 503,
       });
     }
 
-    // Generate a time-limited URL for the raw asset.
-    // This does not bypass Cloudinary access-control restrictions.
     const downloadUrl = cloudinary.utils.private_download_url(
       publicId,
       "epub",
       {
         resource_type: "raw",
+        type: "upload",
         expires_at: Math.floor(Date.now() / 1000) + 60,
         attachment: true,
       }
@@ -64,10 +66,16 @@ export async function GET(request: Request) {
     });
 
     if (!upstream.ok || !upstream.body) {
-      console.error("Cloudinary EPUB retrieval failed:", upstream.status);
+      console.error(
+        "Cloudinary EPUB retrieval failed:",
+        upstream.status
+      );
+
       return new NextResponse("Download temporarily unavailable.", {
         status: 503,
-        headers: { "Cache-Control": "no-store" },
+        headers: {
+          "Cache-Control": "no-store",
+        },
       });
     }
 
@@ -83,9 +91,12 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Secure EPUB delivery failed:", error);
+
     return new NextResponse("Download temporarily unavailable.", {
       status: 503,
-      headers: { "Cache-Control": "no-store" },
+      headers: {
+        "Cache-Control": "no-store",
+      },
     });
   }
 }
