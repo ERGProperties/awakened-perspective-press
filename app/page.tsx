@@ -636,18 +636,32 @@ export default function AwakenedPerspectivePressPage() {
 </div>
           </div>
 
-          <div className="mt-16 border-t border-white/10 pt-8">
-            <div className="flex flex-col items-center justify-between gap-4 text-sm text-stone-500 sm:flex-row">
-              <p>
-                © {new Date().getFullYear()} Awakened Perspective Press.
-              </p>
+<div className="mt-16 border-t border-white/10 pt-8">
+  <div className="flex flex-col items-center justify-between gap-5 text-sm text-stone-500 sm:flex-row">
+    <p>
+      © {new Date().getFullYear()} Awakened Perspective Press.
+    </p>
 
-              <p>
-                Your Story. Your Voice. Your Book.
-              </p>
-            </div>
-          </div>
-        </div>
+    <p>Your Story. Your Voice. Your Book.</p>
+  </div>
+
+  <nav
+    aria-label="Legal and customer support"
+    className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-stone-400"
+  >
+    <a href="/privacy" className="transition hover:text-amber-300">
+      Privacy Policy
+    </a>
+
+    <a href="/terms" className="transition hover:text-amber-300">
+      Terms of Service
+    </a>
+
+    <a href="/contact" className="transition hover:text-amber-300">
+      Contact
+    </a>
+  </nav>
+</div>
       </section>
     </main>
   );
