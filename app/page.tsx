@@ -591,9 +591,9 @@ export default function AwakenedPerspectivePressPage() {
 
       {/* CONTACT */}
       <section
-  id="contact"
-  className="relative overflow-hidden bg-stone-950 pt-24 pb-10 text-white md:pt-32 md:pb-10"
->
+        id="contact"
+        className="relative overflow-hidden bg-stone-950 pt-24 pb-10 text-white md:pt-32 md:pb-10"
+      >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(217,175,96,.18),transparent_40%)]" />
 
         <div className="relative mx-auto max-w-4xl px-6 text-center">
@@ -616,52 +616,63 @@ export default function AwakenedPerspectivePressPage() {
 
           <div className="mt-10 flex justify-center">
             <div className="flex flex-col items-center gap-4">
-  <a
-    href="/publishing-packages"
-    className="inline-flex items-center justify-center rounded-full bg-amber-300 px-8 py-4 font-black text-stone-950 transition hover:bg-amber-200"
-  >
-    Find Your Publishing Path
-    <ArrowRight className="ml-3 h-5 w-5" />
-  </a>
+              <a
+                href="/publishing-packages"
+                className="inline-flex items-center justify-center rounded-full bg-amber-300 px-8 py-4 font-black text-stone-950 transition hover:bg-amber-200"
+              >
+                Find Your Publishing Path
+                <ArrowRight className="ml-3 h-5 w-5" />
+              </a>
 
-  <p className="text-sm text-stone-400">
-    Already know what you need?{" "}
-    <a
-      href="/contact"
-      className="font-semibold text-amber-300 transition hover:text-amber-200"
-    >
-      Start a Conversation →
-    </a>
-  </p>
-</div>
+              <p className="text-sm text-stone-400">
+                Already know what you need?{" "}
+                <a
+                  href="/contact"
+                  className="font-semibold text-amber-300 transition hover:text-amber-200"
+                >
+                  Start a Conversation →
+                </a>
+              </p>
+            </div>
           </div>
 
-<div className="mt-16 border-t border-white/10 pt-8">
-  <div className="flex flex-col items-center justify-between gap-5 text-sm text-stone-500 sm:flex-row">
-    <p>
-      © {new Date().getFullYear()} Awakened Perspective Press.
-    </p>
+          {/* FOOTER */}
+          <footer className="mt-16 border-t border-white/10 pt-8">
+            <div className="flex flex-col items-center justify-between gap-5 text-sm text-stone-500 sm:flex-row">
+              <p>
+                © {new Date().getFullYear()} Awakened Perspective Press.
+              </p>
 
-    <p>Your Story. Your Voice. Your Book.</p>
-  </div>
+              <p>Your Story. Your Voice. Your Book.</p>
+            </div>
 
-  <nav
-    aria-label="Legal and customer support"
-    className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-stone-400"
-  >
-    <a href="/privacy" className="transition hover:text-amber-300">
-      Privacy Policy
-    </a>
+            <nav
+              aria-label="Legal and customer support"
+              className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-stone-400"
+            >
+              <a
+                href="/privacy"
+                className="transition hover:text-amber-300"
+              >
+                Privacy Policy
+              </a>
 
-    <a href="/terms" className="transition hover:text-amber-300">
-      Terms of Service
-    </a>
+              <a
+                href="/terms"
+                className="transition hover:text-amber-300"
+              >
+                Terms of Service
+              </a>
 
-    <a href="/contact" className="transition hover:text-amber-300">
-      Contact
-    </a>
-  </nav>
-</div>
+              <a
+                href="/contact"
+                className="transition hover:text-amber-300"
+              >
+                Contact
+              </a>
+            </nav>
+          </footer>
+        </div>
       </section>
     </main>
   );
