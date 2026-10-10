@@ -9,6 +9,8 @@ export const runtime = "nodejs";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const publisherEmail = "gary@awakenedperspectivepress.com";
+
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -84,14 +86,11 @@ export async function POST(request: Request) {
     }
 
     const { token, tokenHash } = createDownloadToken(session.id);
+
     const paymentIntentId =
       typeof session.payment_intent === "string"
         ? session.payment_intent
         : null;
-
-    const existing = await prisma.purchase.findUnique({
-      where: { stripeSessionId: session.id },
-    });
 
     const purchase = await prisma.purchase.upsert({
       where: { stripeSessionId: session.id },
@@ -103,7 +102,9 @@ export async function POST(request: Request) {
         currency: session.currency,
         paymentStatus: "paid",
         downloadTokenHash: tokenHash,
-        downloadExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        downloadExpiresAt: new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        ),
       },
       update: {
         stripePaymentIntentId: paymentIntentId,
@@ -111,22 +112,73 @@ export async function POST(request: Request) {
         amountPaid: session.amount_total,
         currency: session.currency,
         paymentStatus: "paid",
-        // Keep an existing token and expiry stable across webhook retries.
       },
     });
 
+    // Send a separate publisher order notification.
+    // The deterministic idempotency key helps prevent duplicate alerts
+    // when Stripe retries this same purchase within Resend's key window.
+    const orderNotice = await resend.emails.send(
+      {
+        from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
+        to: [publisherEmail],
+        replyTo: email,
+        subject: "New eBook Order — Understanding External Reflections",
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#071b33;line-height:1.6">
+            <h1>New eBook Order</h1>
+            <p>A successful payment has been received.</p>
+            <p><strong>Book:</strong> Understanding External Reflections: An Unorthodox Conversation</p>
+            <p><strong>Amount paid:</strong> $7.99 USD</p>
+            <p><strong>Customer email:</strong> ${email}</p>
+            <p><strong>Stripe Checkout Session:</strong> ${session.id}</p>
+            <p><strong>Payment status:</strong> Paid</p>
+            <p>The customer download delivery workflow has been processed separately.</p>
+            <p>Awakened Perspective Press</p>
+          </div>
+        `,
+        text: [
+          "New eBook Order",
+          "",
+          "Book: Understanding External Reflections: An Unorthodox Conversation",
+          "Amount paid: $7.99 USD",
+          `Customer email: ${email}`,
+          `Stripe Checkout Session: ${session.id}`,
+          "Payment status: Paid",
+        ].join("\n"),
+      },
+      {
+        idempotencyKey: `publisher-order-${session.id}`,
+      }
+    );
+
+    if (orderNotice.error) {
+      console.error(
+        "Publisher order notification failed:",
+        orderNotice.error
+      );
+      throw new Error("Unable to send publisher order notification.");
+    }
+
+    console.info(
+      "Publisher order notification processed for session:",
+      session.id
+    );
+
+    // Do not resend the customer delivery email if it was already sent.
     if (purchase.emailSentAt) {
       return NextResponse.json({ received: true });
     }
 
-    // For older purchase rows created before token support, don't send
-    // a link unless the stored token matches the deterministic token.
-    if (!purchase.downloadTokenHash || !purchase.downloadExpiresAt) {
+    if (
+      !purchase.downloadTokenHash ||
+      !purchase.downloadExpiresAt
+    ) {
       throw new Error("Purchase download authorization is incomplete.");
     }
 
     const downloadUrl =
-      `${siteUrl}/api/ebook-download?token=${token}`;
+      `${siteUrl}/api/ebook-download?token=${encodeURIComponent(token)}`;
 
     const result = await resend.emails.send({
       from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
@@ -136,7 +188,7 @@ export async function POST(request: Request) {
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#071b33;line-height:1.6">
           <h1>Your eBook is ready</h1>
           <p>Thank you for purchasing <strong>Understanding External Reflections: An Unorthodox Conversation</strong>.</p>
-          <p>Use the secure link below to download your EPUB. This link expires in seven days.</p>
+          <p>Use the secure link below to download the EPUB. This link expires in seven days.</p>
           <p style="margin:28px 0">
             <a href="${downloadUrl}" style="background:#f2b24a;color:#071b33;padding:14px 22px;text-decoration:none;border-radius:8px;font-weight:bold">
               Download Your eBook
@@ -159,6 +211,7 @@ export async function POST(request: Request) {
     });
 
     console.info("eBook delivery email sent for session:", session.id);
+
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Stripe webhook processing failed:", error);
