@@ -66,18 +66,6 @@ export default function ContactPage() {
         });
       }
 
-      // Meta conversion: successful lead form submission
-if (
-  typeof window !== "undefined" &&
-  typeof window.fbq === "function"
-) {
-  window.fbq(
-    "trackSingle",
-    "1057775080418962",
-    "Lead"
-  );
-}
-
       setSubmitted(true);
     } catch (err) {
       console.error("Contact form submission error:", err);
