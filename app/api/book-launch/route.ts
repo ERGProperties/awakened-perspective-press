@@ -5,6 +5,9 @@ import { sendSequenceEmail } from "@/lib/book-launch-sequence";
 
 export const runtime = "nodejs";
 
+const RETRY_DELAY_MS = 10 * 60 * 1000;
+const NEXT_EMAIL_DELAY_MS = 24 * 60 * 60 * 1000;
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
@@ -24,10 +27,12 @@ export async function POST(request: Request) {
 
   try {
     const formData = await request.formData();
+
     const name = String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "")
       .trim()
       .toLowerCase();
+
     const consent = formData.get("consent") === "yes";
     const website = String(formData.get("website") ?? "").trim();
 
@@ -52,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Avoid duplicate records and do not silently renew consent.
+    // Do not create duplicate records or silently renew consent.
     const existingReader = await prisma.reader.findUnique({
       where: { email },
     });
@@ -64,7 +69,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save the reader before attempting email delivery.
+    // Save consent and signup information before sending emails.
     const reader = await prisma.reader.create({
       data: {
         name,
@@ -80,44 +85,123 @@ export async function POST(request: Request) {
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
 
-    // 1. Send the Day 0 welcome email through the sequence module.
+    // Check whether this email address has already purchased the book.
+    let hasPurchased = false;
+
     try {
-      const result = await sendSequenceEmail({
-        name: reader.name,
-        email: reader.email,
-        step: 0,
+      const purchase = await prisma.purchase.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+          paymentStatus: "paid",
+        },
+        select: { id: true },
       });
 
-      if (result.error) {
-        console.error(
-          "Reader saved, but welcome sequence email failed:",
-          result.error
-        );
-      } else {
-        // Schedule Day 1 only after Resend accepts the welcome email.
-        await prisma.reader.update({
-          where: { id: reader.id },
-          data: {
-            sequenceStep: 1,
-            nextEmailAt: new Date(
-              Date.now() + 24 * 60 * 60 * 1000
-            ),
-          },
-        });
-
-        console.info(
-          "Welcome sequence email accepted by Resend:",
-          result.data?.id
-        );
-      }
+      hasPurchased = Boolean(purchase);
     } catch (error) {
+      // If purchase status cannot be verified, do not send marketing
+      // email until the status can be checked safely.
       console.error(
-        "Welcome sequence email request failed:",
+        "Could not verify purchase status for new reader:",
         error
       );
     }
 
-    // 2. Independently notify the publisher.
+    if (hasPurchased) {
+      // Preserve the signup record and consent history, but suppress
+      // marketing emails for a reader who already purchased.
+      await prisma.reader.update({
+        where: { id: reader.id },
+        data: {
+          sequenceStep: 5,
+          nextEmailAt: null,
+        },
+      });
+    } else {
+      // Send the first sequence email.
+      try {
+        const result = await sendSequenceEmail({
+          name: reader.name,
+          email: reader.email,
+          step: 0,
+        });
+
+        if (result.error) {
+          console.error(
+            "Reader saved, but welcome sequence email failed:",
+            result.error
+          );
+
+          // Leave the sequence at step 0 and schedule a retry.
+          await prisma.reader.updateMany({
+            where: {
+              id: reader.id,
+              consent: true,
+              unsubscribedAt: null,
+              sequenceStep: 0,
+            },
+            data: {
+              nextEmailAt: new Date(
+                Date.now() + RETRY_DELAY_MS
+              ),
+            },
+          });
+        } else {
+          // Advance only after Resend accepts the welcome email.
+          await prisma.reader.updateMany({
+            where: {
+              id: reader.id,
+              consent: true,
+              unsubscribedAt: null,
+              sequenceStep: 0,
+            },
+            data: {
+              sequenceStep: 1,
+              nextEmailAt: new Date(
+                Date.now() + NEXT_EMAIL_DELAY_MS
+              ),
+            },
+          });
+
+          console.info(
+            "Welcome sequence email accepted by Resend:",
+            result.data?.id
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Welcome sequence email request failed:",
+          error
+        );
+
+        // Keep the reader eligible for the scheduler to retry.
+        try {
+          await prisma.reader.updateMany({
+            where: {
+              id: reader.id,
+              consent: true,
+              unsubscribedAt: null,
+              sequenceStep: 0,
+            },
+            data: {
+              nextEmailAt: new Date(
+                Date.now() + RETRY_DELAY_MS
+              ),
+            },
+          });
+        } catch (retryError) {
+          console.error(
+            "Could not schedule welcome email retry:",
+            retryError
+          );
+        }
+      }
+    }
+
+    // Independently notify the publisher, including for purchasers.
     const apiKey = process.env.RESEND_API_KEY;
 
     if (!apiKey) {
@@ -144,6 +228,10 @@ export async function POST(request: Request) {
               <p><strong>Name:</strong> ${safeName}</p>
               <p><strong>Email:</strong> ${safeEmail}</p>
               <p><strong>Marketing consent:</strong> Yes — requested launch and publication updates.</p>
+
+              <p><strong>Already purchased:</strong> ${
+                hasPurchased ? "Yes — marketing sequence suppressed." : "No purchase found."
+              }</p>
 
               <p style="font-size:12px;color:#777">
                 Submitted through awakenedperspectivepress.com/book-launch.

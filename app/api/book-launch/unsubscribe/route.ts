@@ -9,9 +9,11 @@ export async function POST(request: Request) {
 
   try {
     const formData = await request.formData();
+
     const email = String(formData.get("email") ?? "")
       .trim()
       .toLowerCase();
+
     const token = String(formData.get("token") ?? "");
 
     if (
@@ -27,6 +29,7 @@ export async function POST(request: Request) {
     await prisma.reader.updateMany({
       where: { email },
       data: {
+        consent: false,
         unsubscribedAt: new Date(),
         nextEmailAt: null,
       },
