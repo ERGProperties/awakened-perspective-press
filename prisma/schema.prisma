@@ -8,17 +8,22 @@ datasource db {
 }
 
 model Reader {
-  id          String   @id @default(cuid())
-  name        String
-  email       String   @unique
-  consent     Boolean  @default(false)
-  consentedAt DateTime?
-  source      String   @default("book-launch")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  consent        Boolean   @default(false)
+  consentedAt    DateTime?
+  source         String    @default("book-launch")
+  sequenceStep   Int       @default(0)
+  nextEmailAt    DateTime?
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([createdAt])
   @@index([source])
+  @@index([nextEmailAt])
+  @@index([unsubscribedAt])
 }
 
 model Purchase {
