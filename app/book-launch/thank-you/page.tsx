@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 import CheckoutButton from "./CheckoutButton";
+import LeadPixel from "./LeadPixel";
 
 export const metadata: Metadata = {
   title: "Read Now | Understanding External Reflections",
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 export default function BookLaunchOfferPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#071b33] text-white">
+      <LeadPixel />
+
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center px-5 py-4 sm:px-8">
           <Link
@@ -28,7 +31,9 @@ export default function BookLaunchOfferPage() {
               className="h-12 w-[76px] shrink-0 object-contain"
             />
             <div className="leading-none">
-              <p className="font-serif text-[1.35rem] font-bold">Awakened</p>
+              <p className="font-serif text-[1.35rem] font-bold">
+                Awakened
+              </p>
               <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">
                 Perspective Press
               </p>
