@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen, Mail } from "lucide-react";
 import CheckoutButton from "./CheckoutButton";
 import LeadPixel from "./LeadPixel";
 
@@ -62,7 +62,8 @@ export default function BookLaunchOfferPage() {
                 <p className="mt-5 text-lg leading-8 text-slate-300">
                   Get the digital edition of{" "}
                   <em>
-                    Understanding External Reflections: An Unorthodox Conversation
+                    Understanding External Reflections: An Unorthodox
+                    Conversation
                   </em>{" "}
                   and begin reading as soon as your purchase is complete.
                 </p>
@@ -84,6 +85,18 @@ export default function BookLaunchOfferPage() {
                 </p>
               </div>
             </div>
+          </div>
+
+          <div className="mx-auto mt-6 flex max-w-2xl items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+            <Mail className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
+
+            <p className="text-sm leading-6 text-slate-300">
+              <span className="font-semibold text-white">
+                Haven&apos;t received your welcome email?
+              </span>{" "}
+              Check your Spam or Junk folder. If you find it there, move it to
+              your inbox to help ensure you receive future updates.
+            </p>
           </div>
 
           <div className="mt-6 text-center">

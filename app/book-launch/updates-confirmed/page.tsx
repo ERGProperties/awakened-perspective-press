@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "You're on the Launch List | Understanding External Reflections",
@@ -27,7 +27,9 @@ export default function UpdatesConfirmedPage() {
               className="h-12 w-[76px] shrink-0 object-contain"
             />
             <div className="leading-none">
-              <p className="font-serif text-[1.35rem] font-bold">Awakened</p>
+              <p className="font-serif text-[1.35rem] font-bold">
+                Awakened
+              </p>
               <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">
                 Perspective Press
               </p>
@@ -59,6 +61,25 @@ export default function UpdatesConfirmedPage() {
           <p className="mt-4 text-sm leading-6 text-slate-400">
             Your signup does not place an order or charge you.
           </p>
+
+          <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-amber-300/20 bg-white/[0.04] p-5 text-left sm:p-6">
+            <div className="flex items-start gap-3">
+              <Mail className="mt-1 h-5 w-5 shrink-0 text-amber-300" />
+
+              <div>
+                <h2 className="font-semibold text-white">
+                  Keep an eye on your inbox
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  Your welcome email should arrive shortly. If you don&apos;t
+                  see it, please check your Spam or Junk folder. If you find it
+                  there, move it to your inbox to help ensure you receive future
+                  updates.
+                </p>
+              </div>
+            </div>
+          </div>
 
           <Link
             href="/understanding-external-reflections"
