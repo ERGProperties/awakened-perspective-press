@@ -15,22 +15,60 @@ concurrency:
 jobs:
   send-sequence:
     runs-on: ubuntu-latest
+
     steps:
       - name: Process due book launch emails
         env:
           SITE_URL: ${{ secrets.SITE_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        shell: bash
         run: |
           set -eu
 
-          if [ -z "$SITE_URL" ] || [ -z "$CRON_SECRET" ]; then
+          if [[ -z "$SITE_URL" || -z "$CRON_SECRET" ]]; then
             echo "SITE_URL and CRON_SECRET must be configured in GitHub Secrets."
             exit 1
           fi
 
-          curl --fail-with-body --silent --show-error \
-            --retry 2 \
-            --retry-delay 5 \
-            --max-time 70 \
-            -H "Authorization: Bearer ${CRON_SECRET}" \
-            "${SITE_URL%/}/api/cron/book-launch-sequence"
+          ENDPOINT="${SITE_URL%/}/api/cron/book-launch-sequence"
+
+          echo "Calling book launch email endpoint..."
+
+          HTTP_STATUS=$(curl \
+            --silent \
+            --show-error \
+            --output response.txt \
+            --write-out "%{http_code}" \
+            --max-time 60 \
+            --request GET \
+            --header "Authorization: Bearer ${CRON_SECRET}" \
+            "$ENDPOINT")
+
+          echo "HTTP status: ${HTTP_STATUS}"
+
+          if [[ "$HTTP_STATUS" =~ ^3[0-9][0-9]$ ]]; then
+            echo "The endpoint redirected the request."
+            echo "Redirect details:"
+            curl \
+              --silent \
+              --show-error \
+              --head \
+              --max-time 20 \
+              "$ENDPOINT" \
+              --output /dev/null \
+              --write-out "Redirect URL: %{redirect_url}\n" || true
+
+            echo "Check SITE_URL and the production domain's canonical redirect."
+            exit 1
+          fi
+
+          echo "Endpoint response:"
+          cat response.txt
+          echo
+
+          if [[ ! "$HTTP_STATUS" =~ ^2[0-9][0-9]$ ]]; then
+            echo "The endpoint returned HTTP ${HTTP_STATUS}."
+            exit 1
+          fi
+
+          echo "Book launch email endpoint completed successfully."
