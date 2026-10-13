@@ -3,150 +3,157 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { createDownloadToken } from "@/lib/download-token";
 import PurchasePixel from "./PurchasePixel";
+import GoogleAdsPurchaseConversion from "./GoogleAdsPurchaseConversion";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string }>;
 };
 
 export default async function PurchaseSuccessPage({
-searchParams,
+  searchParams,
 }: PageProps) {
-const { session_id: sessionId } = await searchParams;
+  const { session_id: sessionId } = await searchParams;
 
-let paid = false;
-let email: string | null = null;
-let downloadUrl: string | null = null;
-let purchaseValue = 0;
-let purchaseCurrency = "USD";
+  let paid = false;
+  let email: string | null = null;
+  let downloadUrl: string | null = null;
+  let purchaseValue = 0;
+  let purchaseCurrency = "USD";
 
-if (sessionId && process.env.STRIPE_SECRET_KEY) {
-try {
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const session = await stripe.checkout.sessions.retrieve(sessionId);
+  if (sessionId && process.env.STRIPE_SECRET_KEY) {
+    try {
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-  paid =
-    session.payment_status === "paid" &&
-    session.mode === "payment" &&
-    session.metadata?.product ===
-      "understanding-external-reflections-ebook";
+      paid =
+        session.payment_status === "paid" &&
+        session.mode === "payment" &&
+        session.metadata?.product ===
+          "understanding-external-reflections-ebook";
 
-  if (paid) {
-    email = session.customer_details?.email ?? null;
-    purchaseValue = (session.amount_total ?? 0) / 100;
-    purchaseCurrency = (session.currency ?? "usd").toUpperCase();
+      if (paid) {
+        email = session.customer_details?.email ?? null;
+        purchaseValue = (session.amount_total ?? 0) / 100;
+        purchaseCurrency = (session.currency ?? "usd").toUpperCase();
 
-    const { token, tokenHash } = createDownloadToken(sessionId);
+        const { token, tokenHash } = createDownloadToken(sessionId);
 
-    const purchase = await prisma.purchase.findUnique({
-      where: { downloadTokenHash: tokenHash },
-    });
+        const purchase = await prisma.purchase.findUnique({
+          where: { downloadTokenHash: tokenHash },
+        });
 
-    if (
-      purchase &&
-      purchase.paymentStatus === "paid" &&
-      purchase.downloadTokenHash === tokenHash &&
-      purchase.downloadExpiresAt &&
-      purchase.downloadExpiresAt > new Date()
-    ) {
-      downloadUrl = `/api/ebook-download?token=${encodeURIComponent(token)}`;
+        if (
+          purchase &&
+          purchase.paymentStatus === "paid" &&
+          purchase.downloadTokenHash === tokenHash &&
+          purchase.downloadExpiresAt &&
+          purchase.downloadExpiresAt > new Date()
+        ) {
+          downloadUrl = `/api/ebook-download?token=${encodeURIComponent(token)}`;
+        }
+      }
+    } catch (error) {
+      console.error("Unable to verify purchase success page:", error);
     }
   }
-} catch (error) {
-  console.error("Unable to verify purchase success page:", error);
-}
 
-}
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-stone-950 px-6 py-16 text-white">
+      {paid && sessionId && purchaseValue > 0 && (
+        <>
+          <PurchasePixel
+            sessionId={sessionId}
+            value={purchaseValue}
+            currency={purchaseCurrency}
+          />
+          <GoogleAdsPurchaseConversion
+            transactionId={sessionId}
+            value={purchaseValue}
+            currency={purchaseCurrency}
+          />
+        </>
+      )}
 
-return (
-<main className="flex min-h-screen items-center justify-center bg-stone-950 px-6 py-16 text-white">
-{paid && sessionId && purchaseValue > 0 && (
-<PurchasePixel
-       sessionId={sessionId}
-       value={purchaseValue}
-       currency={purchaseCurrency}
-     />
-)}
-
-  <section className="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-8 text-center shadow-2xl sm:p-12">
-    <p className="text-sm font-bold uppercase tracking-[0.3em] text-amber-300">
-      Awakened Perspective Press
-    </p>
-
-    {paid ? (
-      <>
-        <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
-          Your next chapter starts now.
-        </h1>
-
-        <p className="mt-6 text-lg leading-8 text-stone-300">
-          Thank you for purchasing{" "}
-          <em>
-            Understanding External Reflections: An Unorthodox Conversation
-          </em>
-          .
+      <section className="w-full max-w-2xl rounded-2xl border border-white/10 bg-slate-900 p-8 text-center shadow-2xl sm:p-12">
+        <p className="text-sm font-bold uppercase tracking-[0.3em] text-amber-300">
+          Awakened Perspective Press
         </p>
 
-        <p className="mt-4 leading-7 text-stone-300">
-          Your purchase has been confirmed.
-        </p>
-
-        {downloadUrl ? (
+        {paid ? (
           <>
-            <p className="mt-4 leading-7 text-stone-300">
-              Your eBook is ready. Click below to download your copy.
+            <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
+              Your next chapter starts now.
+            </h1>
+
+            <p className="mt-6 text-lg leading-8 text-stone-300">
+              Thank you for purchasing{" "}
+              <em>
+                Understanding External Reflections: An Unorthodox Conversation
+              </em>
+              .
             </p>
 
-            <div className="mt-8">
-              <a
-                href={downloadUrl}
-                className="inline-flex rounded-full bg-amber-300 px-8 py-4 text-lg font-bold text-stone-950 transition hover:bg-amber-200"
-              >
-                Download Your eBook
-              </a>
-            </div>
+            <p className="mt-4 leading-7 text-stone-300">
+              Your purchase has been confirmed.
+            </p>
 
-            <p className="mt-5 text-sm leading-6 text-stone-400">
-              {email
-                ? `A backup download link has also been sent to ${email}.`
-                : "Your download email will serve as a backup."}
+            {downloadUrl ? (
+              <>
+                <p className="mt-4 leading-7 text-stone-300">
+                  Your eBook is ready. Click below to download your copy.
+                </p>
+
+                <div className="mt-8">
+                  <a
+                    href={downloadUrl}
+                    className="inline-flex rounded-full bg-amber-300 px-8 py-4 text-lg font-bold text-stone-950 transition hover:bg-amber-200"
+                  >
+                    Download Your eBook
+                  </a>
+                </div>
+
+                <p className="mt-5 text-sm leading-6 text-stone-400">
+                  {email
+                    ? `A backup download link has also been sent to ${email}.`
+                    : "Your download email will serve as a backup."}
+                </p>
+              </>
+            ) : (
+              <p className="mt-4 leading-7 text-stone-300">
+                Your download is being prepared. Please refresh this page
+                shortly. If you received a download email, you can also use
+                the link in that message.
+              </p>
+            )}
+
+            <p className="mt-6 text-sm leading-6 text-stone-400">
+              If you need assistance, please contact Awakened Perspective Press.
             </p>
           </>
         ) : (
-          <p className="mt-4 leading-7 text-stone-300">
-            Your download is being prepared. Please refresh this page
-            shortly. If you received a download email, you can also use
-            the link in that message.
-          </p>
+          <>
+            <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
+              We couldn&apos;t verify your purchase yet.
+            </h1>
+
+            <p className="mt-6 leading-7 text-stone-300">
+              Your payment may still be processing. Please check your email for
+              confirmation before trying again.
+            </p>
+          </>
         )}
 
-        <p className="mt-6 text-sm leading-6 text-stone-400">
-          If you need assistance, please contact Awakened Perspective Press.
-        </p>
-      </>
-    ) : (
-      <>
-        <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
-          We couldn&apos;t verify your purchase yet.
-        </h1>
-
-        <p className="mt-6 leading-7 text-stone-300">
-          Your payment may still be processing. Please check your email for
-          confirmation before trying again.
-        </p>
-      </>
-    )}
-
-    <div className="mt-10">
-      <Link
-        href="/"
-        className="inline-flex rounded-full border border-white/20 px-7 py-3 font-bold text-white transition hover:bg-white/10"
-      >
-        Return to Awakened Perspective Press
-      </Link>
-    </div>
-  </section>
-</main>
-);
+        <div className="mt-10">
+          <Link
+            href="/"
+            className="inline-flex rounded-full border border-white/20 px-7 py-3 font-bold text-white transition hover:bg-white/10"
+          >
+            Return to Awakened Perspective Press
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
 }

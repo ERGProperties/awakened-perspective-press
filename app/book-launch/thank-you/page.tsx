@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Mail } from "lucide-react";
 import CheckoutButton from "./CheckoutButton";
 import LeadPixel from "./LeadPixel";
+import GoogleAdsLeadConversion from "./GoogleAdsLeadConversion";
 
 export const metadata: Metadata = {
   title: "Read Now | Understanding External Reflections",
@@ -14,6 +15,7 @@ export default function BookLaunchOfferPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#071b33] text-white">
       <LeadPixel />
+      <GoogleAdsLeadConversion />
 
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center px-5 py-4 sm:px-8">
