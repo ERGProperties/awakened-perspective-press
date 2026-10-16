@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createDownloadToken } from "@/lib/download-token";
 import PurchasePixel from "./PurchasePixel";
 import GoogleAdsPurchaseConversion from "./GoogleAdsPurchaseConversion";
+import TikTokPurchaseEvent from "./TikTokPurchaseEvent";
 
 export const dynamic = "force-dynamic";
 
@@ -68,8 +69,15 @@ export default async function PurchaseSuccessPage({
             value={purchaseValue}
             currency={purchaseCurrency}
           />
+
           <GoogleAdsPurchaseConversion
             transactionId={sessionId}
+            value={purchaseValue}
+            currency={purchaseCurrency}
+          />
+
+          <TikTokPurchaseEvent
+            sessionId={sessionId}
             value={purchaseValue}
             currency={purchaseCurrency}
           />
