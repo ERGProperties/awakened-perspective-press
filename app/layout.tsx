@@ -144,6 +144,7 @@ export default function RootLayout({
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
             gtag('js', new Date());
 
             gtag('config', 'AW-18497917004');
@@ -169,14 +170,77 @@ export default function RootLayout({
             }(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
 
-            // Existing Pixel: Awakening Perspective Press
+            // Existing Pixel: Awakened Perspective Press
             fbq('init', '1387213283129142');
 
-            // New Pixel: Understanding External Reflections
+            // Pixel: Understanding External Reflections
             fbq('init', '1057775080418962');
 
             // Send PageView to both initialized Pixels
             fbq('track', 'PageView');
+          `}
+        </Script>
+
+        {/* TikTok Pixel */}
+        <Script id="tiktok-pixel" strategy="afterInteractive">
+          {`
+            !function (w, d, t) {
+              w.TiktokAnalyticsObject = t;
+              var ttq = w[t] = w[t] || [];
+
+              ttq.methods = [
+                "page", "track", "identify", "instances", "debug",
+                "on", "off", "once", "ready", "alias", "group",
+                "enableCookie", "disableCookie", "holdConsent",
+                "revokeConsent", "grantConsent"
+              ];
+
+              ttq.setAndDefer = function (t, e) {
+                t[e] = function () {
+                  t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
+                };
+              };
+
+              for (var i = 0; i < ttq.methods.length; i++) {
+                ttq.setAndDefer(ttq, ttq.methods[i]);
+              }
+
+              ttq.instance = function (t) {
+                for (
+                  var e = ttq._i[t] || [],
+                    n = 0;
+                  n < ttq.methods.length;
+                  n++
+                ) {
+                  ttq.setAndDefer(e, ttq.methods[n]);
+                }
+                return e;
+              };
+
+              ttq.load = function (e, n) {
+                var r = "https://analytics.tiktok.com/i18n/pixel/events.js";
+                var o = n && n.partner;
+
+                ttq._i = ttq._i || {};
+                ttq._i[e] = [];
+                ttq._i[e]._u = r;
+                ttq._t = ttq._t || {};
+                ttq._t[e] = +new Date();
+                ttq._o = ttq._o || {};
+                ttq._o[e] = n || {};
+
+                var s = d.createElement("script");
+                s.type = "text/javascript";
+                s.async = true;
+                s.src = r + "?sdkid=" + e + "&lib=" + t;
+
+                var firstScript = d.getElementsByTagName("script")[0];
+                firstScript.parentNode.insertBefore(s, firstScript);
+              };
+
+              ttq.load("DB8QDQJC77UB6E0EB6DG");
+              ttq.page();
+            }(window, document, "ttq");
           `}
         </Script>
 
