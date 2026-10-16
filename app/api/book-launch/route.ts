@@ -102,8 +102,7 @@ export async function POST(request: Request) {
 
       hasPurchased = Boolean(purchase);
     } catch (error) {
-      // If purchase status cannot be verified, do not send marketing
-      // email until the status can be checked safely.
+      // If purchase status cannot be verified, log the issue.
       console.error(
         "Could not verify purchase status for new reader:",
         error
@@ -111,8 +110,7 @@ export async function POST(request: Request) {
     }
 
     if (hasPurchased) {
-      // Preserve the signup record and consent history, but suppress
-      // marketing emails for a reader who already purchased.
+      // Preserve signup and consent history, but suppress marketing emails.
       await prisma.reader.update({
         where: { id: reader.id },
         data: {
@@ -230,7 +228,9 @@ export async function POST(request: Request) {
               <p><strong>Marketing consent:</strong> Yes — requested launch and publication updates.</p>
 
               <p><strong>Already purchased:</strong> ${
-                hasPurchased ? "Yes — marketing sequence suppressed." : "No purchase found."
+                hasPurchased
+                  ? "Yes — marketing sequence suppressed."
+                  : "No purchase found."
               }</p>
 
               <p style="font-size:12px;color:#777">
@@ -259,8 +259,9 @@ export async function POST(request: Request) {
       }
     }
 
+    // Only a newly created reader receives the signup tracking marker.
     return NextResponse.redirect(
-      new URL("/book-launch/thank-you", origin),
+      new URL("/book-launch/thank-you?signup=success", origin),
       303
     );
   } catch (error) {

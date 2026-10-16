@@ -1,14 +1,23 @@
+
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowLeft, ArrowRight, BookOpen, Mail } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Mail,
+} from "lucide-react";
+import TikTokEvent from "@/components/TikTokEvent";
 
 export const metadata: Metadata = {
   title: "Understanding External Reflections | Gary Walker",
   description:
     "Explore Understanding External Reflections: An Unorthodox Conversation by Gary Walker. A different perspective on life, reality, and who you really are.",
   alternates: {
-    canonical: "https://awakenedperspectivepress.com/understanding-external-reflections",
+    canonical:
+      "https://awakenedperspectivepress.com/understanding-external-reflections",
   },
   openGraph: {
     title: "Understanding External Reflections | Gary Walker",
@@ -17,7 +26,12 @@ export const metadata: Metadata = {
     url: "https://awakenedperspectivepress.com/understanding-external-reflections",
     siteName: "Awakened Perspective Press",
     type: "website",
-    images: [{ url: "/understanding-external-reflections-hero.png", alt: "Understanding External Reflections by Gary Walker" }],
+    images: [
+      {
+        url: "/understanding-external-reflections-hero.png",
+        alt: "Understanding External Reflections by Gary Walker",
+      },
+    ],
   },
 };
 
@@ -30,9 +44,15 @@ const questions = [
 export default function UnderstandingExternalReflectionsPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#071b33] text-white">
+      <TikTokEvent event="ViewContent" />
+
       <header className="relative z-10 border-b border-white/10 bg-[#071b33]/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-          <Link href="/" className="flex items-center gap-3" aria-label="Awakened Perspective Press home">
+          <Link
+            href="/"
+            className="flex items-center gap-3"
+            aria-label="Awakened Perspective Press home"
+          >
             <Image
               src="/app-logo-hero.png"
               alt=""
@@ -41,13 +61,23 @@ export default function UnderstandingExternalReflectionsPage() {
               priority
               className="h-12 w-[76px] shrink-0 object-contain"
             />
+
             <div className="leading-none">
-              <p className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-white">Awakened</p>
-              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">Perspective Press</p>
+              <p className="font-serif text-[1.35rem] font-bold tracking-[-0.02em] text-white">
+                Awakened
+              </p>
+              <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.28em] text-amber-300">
+                Perspective Press
+              </p>
             </div>
           </Link>
-          <Link href="/book-launch" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200 sm:px-5">
-            Follow the Launch <ArrowRight className="h-4 w-4" />
+
+          <Link
+            href="/book-launch"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-200 sm:px-5"
+          >
+            Follow the Launch
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </header>

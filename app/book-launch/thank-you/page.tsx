@@ -5,6 +5,7 @@ import { ArrowRight, BookOpen, Mail } from "lucide-react";
 import CheckoutButton from "./CheckoutButton";
 import LeadPixel from "./LeadPixel";
 import GoogleAdsLeadConversion from "./GoogleAdsLeadConversion";
+import TikTokEvent from "@/components/TikTokEvent";
 
 export const metadata: Metadata = {
   title: "Read Now | Understanding External Reflections",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function BookLaunchOfferPage() {
   return (
     <main className="flex min-h-screen flex-col bg-[#071b33] text-white">
+      <TikTokEvent event="CompleteRegistration" />
       <LeadPixel />
       <GoogleAdsLeadConversion />
 
