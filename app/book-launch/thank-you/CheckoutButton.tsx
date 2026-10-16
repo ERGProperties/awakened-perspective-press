@@ -3,13 +3,57 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 
+declare global {
+  interface Window {
+    ttq?: {
+      track: (
+        event: string,
+        properties?: Record<string, unknown>
+      ) => void;
+    };
+  }
+}
+
 export default function CheckoutButton() {
   const [loading, setLoading] = useState(false);
 
   async function startCheckout() {
+    if (loading) return;
+
     setLoading(true);
 
     try {
+      // Record the checkout attempt before requesting a Stripe session.
+      // Wait briefly for TikTok Pixel if it has not loaded yet.
+      let attempts = 0;
+
+      while (
+        typeof window.ttq?.track !== "function" &&
+        attempts < 10
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        attempts += 1;
+      }
+
+      if (typeof window.ttq?.track === "function") {
+        window.ttq.track("InitiateCheckout", {
+          contents: [
+            {
+              content_id: "understanding-external-reflections-ebook",
+              content_type: "product",
+              content_name: "Understanding External Reflections eBook",
+              quantity: 1,
+            },
+          ],
+          value: 7.99,
+          currency: "USD",
+        });
+      } else {
+        console.warn(
+          "TikTok Pixel is not available. Continuing to checkout."
+        );
+      }
+
       const response = await fetch("/api/checkout", {
         method: "POST",
       });
