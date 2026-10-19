@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowLeft,
   ArrowRight,
   Headphones,
   Sparkles,
@@ -83,14 +82,15 @@ export default function AudioPreviewPage() {
             </p>
           </div>
 
-          {/* Audio preview */}
+          {/* Audio preview card */}
           <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-3xl border border-amber-300/25 bg-white/[0.04] shadow-2xl shadow-black/30">
             <Image
-              src="/gary-and-sage-audio-cover.png"
+              src="/understanding-external-reflections-audio-motion.gif"
               alt="Understanding External Reflections — Gary and Sage audio preview, Chapter One: The Mirror"
-              width={1536}
-              height={1024}
+              width={1672}
+              height={941}
               priority
+              unoptimized
               sizes="(max-width: 768px) 100vw, 768px"
               className="h-auto w-full"
             />
