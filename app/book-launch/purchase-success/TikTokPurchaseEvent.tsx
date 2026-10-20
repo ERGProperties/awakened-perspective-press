@@ -44,7 +44,7 @@ export default function TikTokPurchaseEvent({
       }
 
       if (typeof window.ttq?.track === "function") {
-        window.ttq.track("Purchase", {
+        window.ttq.track("CompletePayment", {
           contents: [
             {
               content_id: "understanding-external-reflections-ebook",
