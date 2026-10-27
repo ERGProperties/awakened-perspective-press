@@ -92,25 +92,29 @@ export default async function PurchaseSuccessPage({
         {paid ? (
           <>
             <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
-              Your next chapter starts now.
+              Your journey from confusion to clarity begins here.
             </h1>
 
             <p className="mt-6 text-lg leading-8 text-stone-300">
               Thank you for purchasing{" "}
-              <em>
-                Understanding External Reflections: An Unorthodox Conversation
-              </em>
-              .
+              <em>Understanding External Reflections</em>.
+            </p>
+
+            <p className="mt-3 text-base italic text-amber-200">
+              A Dialogue with My Inner Being
             </p>
 
             <p className="mt-4 leading-7 text-stone-300">
-              Your purchase has been confirmed.
+              Your purchase has been confirmed. Thank you for joining Gary
+              Walker on this personal exploration of perspective, inner
+              connection, and a different way of understanding experience.
             </p>
 
             {downloadUrl ? (
               <>
                 <p className="mt-4 leading-7 text-stone-300">
-                  Your eBook is ready. Click below to download your copy.
+                  Your eBook is ready. Select the button below to download
+                  your copy and begin reading.
                 </p>
 
                 <div className="mt-8">
@@ -148,7 +152,9 @@ export default async function PurchaseSuccessPage({
 
             <p className="mt-6 leading-7 text-stone-300">
               Your payment may still be processing. Please check your email for
-              confirmation before trying again.
+              confirmation before trying again. If you have already paid and
+              need help accessing your eBook, please contact Awakened
+              Perspective Press.
             </p>
           </>
         )}

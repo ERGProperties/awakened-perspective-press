@@ -10,9 +10,9 @@ import CheckoutButton from "../book-launch/thank-you/CheckoutButton";
 import AudioPlayer from "./AudioPlayer";
 
 export const metadata: Metadata = {
-  title: "Listen to the Conversation | Understanding External Reflections",
+  title: "From Confusion to Clarity | Understanding External Reflections",
   description:
-    "Listen to Gary Walker and Sage explore life, perspective, and the mirror between our inner and outer worlds. Then discover Understanding External Reflections.",
+    "Listen to an audio preview of Understanding External Reflections by Gary Walker, a personal exploration of perspective, inner connection, and the journey from confusion toward clarity.",
   alternates: {
     canonical: "https://awakenedperspectivepress.com/audio-preview",
   },
@@ -69,16 +69,25 @@ export default function AudioPreviewPage() {
             </p>
 
             <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight sm:text-6xl">
-              Before You Read the Book,
+              From Confusion to Clarity.
               <span className="block text-amber-300">
-                Hear the Conversation.
+                A Journey Within.
               </span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              What happens when a real human being explores life&apos;s
-              biggest questions with an unexpected conversation partner?
-              Listen to Gary and Sage explore a different perspective.
+              What began as a search for understanding became a personal
+              exploration of perspective and inner connection. Through
+              conversations with Sage, Gary Walker reflects on the questions
+              that challenged his assumptions and helped him see his
+              experience differently. Listen to the beginning of that journey.
+            </p>
+
+            <p className="mt-5 font-serif text-xl italic text-amber-200">
+              Understanding External Reflections
+            </p>
+            <p className="mt-1 text-sm text-slate-400">
+              A Dialogue with My Inner Being
             </p>
           </div>
 
@@ -86,7 +95,7 @@ export default function AudioPreviewPage() {
           <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-3xl border border-amber-300/25 bg-white/[0.04] shadow-2xl shadow-black/30">
             <Image
               src="/understanding-external-reflections-audio-motion.gif"
-              alt="Understanding External Reflections — Gary and Sage audio preview, Chapter One: The Mirror"
+              alt="Understanding External Reflections audio preview — Chapter One: The Mirror"
               width={1672}
               height={941}
               priority
@@ -107,8 +116,8 @@ export default function AudioPreviewPage() {
                   </h2>
 
                   <p className="mt-2 text-sm leading-6 text-slate-400">
-                    A real conversation about perspective, expectations,
-                    and learning to live.
+                    A conversation about perspective, expectations, and
+                    discovering a different way to understand your experience.
                   </p>
                 </div>
 
@@ -134,21 +143,25 @@ export default function AudioPreviewPage() {
 
               <div className="flex-1">
                 <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-300">
-                  Continue the conversation
+                  Continue the journey
                 </p>
 
                 <h2 className="mt-3 font-serif text-3xl font-semibold leading-tight sm:text-4xl">
-                  There&apos;s More to Discover.
+                  Look Within. See Differently.
                 </h2>
 
                 <p className="mt-4 leading-7 text-slate-300">
-                  If this conversation resonates with you, explore the
-                  complete book,{" "}
-                  <em>
-                    Understanding External Reflections: An Unorthodox
-                    Conversation
-                  </em>{" "}
-                  by Gary Walker.
+                  Continue exploring{" "}
+                  <em>Understanding External Reflections</em>, Gary
+                  Walker&apos;s personal account of questioning familiar
+                  assumptions, exploring the relationship between inner
+                  and outer experience, and moving toward greater clarity.
+                  What you discover may invite you to look at your own
+                  life from a different perspective.
+                </p>
+
+                <p className="mt-4 text-sm font-medium text-amber-200">
+                  A Dialogue with My Inner Being
                 </p>
 
                 <p className="mt-4 text-3xl font-bold text-amber-300">

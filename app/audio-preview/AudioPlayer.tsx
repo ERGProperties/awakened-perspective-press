@@ -5,10 +5,24 @@ import { useEffect, useRef } from "react";
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
+    ttq?: {
+      track?: (
+        event: string,
+        properties?: Record<string, unknown>
+      ) => void;
+    };
   }
 }
 
 const META_PIXEL_ID = "1057775080418962";
+
+const AUDIO_CONTENT = {
+  content_name: "Understanding External Reflections Audio Preview",
+  content_type: "product",
+  content_ids: [
+    "understanding-external-reflections-audio-preview",
+  ],
+};
 
 export default function AudioPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -25,48 +39,70 @@ export default function AudioPlayer() {
     const trackAudioPlay = () => {
       if (hasTrackedPlay.current) return;
 
-      // Keep the existing custom browser event.
+      // Preserve the existing custom browser event.
       window.dispatchEvent(new CustomEvent("audio-preview-play"));
 
-      const sendMetaEvents = () => {
+      const sendTrackingEvents = () => {
         if (cancelled || hasTrackedPlay.current) return;
 
-        if (typeof window.fbq === "function") {
-          hasTrackedPlay.current = true;
+        const metaReady = typeof window.fbq === "function";
+        const tiktokReady =
+          typeof window.ttq?.track === "function";
 
-          window.fbq(
-            "trackSingle",
-            META_PIXEL_ID,
-            "ViewContent",
-            {
-              content_name: "Understanding External Reflections Audio Preview",
-              content_type: "product",
-              content_ids: [
-                "understanding-external-reflections-audio-preview",
-              ],
-            }
-          );
+        // Wait briefly for both tracking scripts to become available.
+        if (!metaReady || !tiktokReady) {
+          attempts += 1;
 
-          window.fbq(
-            "trackSingle",
-            META_PIXEL_ID,
-            "AudioPlay",
-            {
-              content_name: "Understanding External Reflections Audio Preview",
-            }
-          );
+          if (attempts < 50) {
+            timer = setTimeout(sendTrackingEvents, 100);
+          }
 
           return;
         }
 
-        attempts += 1;
+        // Mark the first play so repeated play/pause actions
+        // do not generate duplicate events during this page visit.
+        hasTrackedPlay.current = true;
 
-        if (attempts < 50) {
-          timer = setTimeout(sendMetaEvents, 100);
-        }
+        // Meta: preserve the existing book-specific events.
+        window.fbq!(
+          "trackSingle",
+          META_PIXEL_ID,
+          "ViewContent",
+          AUDIO_CONTENT
+        );
+
+        window.fbq!(
+          "trackSingle",
+          META_PIXEL_ID,
+          "AudioPlay",
+          {
+            content_name: AUDIO_CONTENT.content_name,
+          }
+        );
+
+        // TikTok: record interest in the book.
+        window.ttq!.track!("ViewContent", {
+          contents: [
+            {
+              content_id:
+                "understanding-external-reflections-audio-preview",
+              content_name: AUDIO_CONTENT.content_name,
+              content_type: "product",
+              quantity: 1,
+            },
+          ],
+          content_type: "product",
+        });
+
+        // TikTok: custom event for actual audio playback.
+        window.ttq!.track!("AudioPlay", {
+          content_name: AUDIO_CONTENT.content_name,
+          content_type: "product",
+        });
       };
 
-      sendMetaEvents();
+      sendTrackingEvents();
     };
 
     audio.addEventListener("play", trackAudioPlay);

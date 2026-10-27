@@ -9,6 +9,8 @@ import TikTokEvent from "@/components/TikTokEvent";
 
 export const metadata: Metadata = {
   title: "Read Now | Understanding External Reflections",
+  description:
+    "Begin reading Understanding External Reflections: A Dialogue with My Inner Being, Gary Walker's personal journey from confusion to clarity.",
   robots: { index: false, follow: true },
 };
 
@@ -60,16 +62,22 @@ export default function BookLaunchOfferPage() {
                 </p>
 
                 <h1 className="mt-4 font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-                  Don&apos;t wait. Read it now.
+                  From Confusion to Clarity.
                 </h1>
 
+                <p className="mt-3 text-lg font-medium text-amber-200">
+                  Understanding External Reflections
+                </p>
+
+                <p className="mt-1 text-sm italic text-slate-300">
+                  A Dialogue with My Inner Being
+                </p>
+
                 <p className="mt-5 text-lg leading-8 text-slate-300">
-                  Get the digital edition of{" "}
-                  <em>
-                    Understanding External Reflections: An Unorthodox
-                    Conversation
-                  </em>{" "}
-                  and begin reading as soon as your purchase is complete.
+                  Begin Gary Walker&apos;s personal exploration of perspective,
+                  inner connection, and the questions that challenged his
+                  assumptions. Discover how looking within can open the door
+                  to seeing your experience differently.
                 </p>
 
                 <div className="mt-7 flex flex-col items-center gap-3 sm:items-start">
