@@ -7,7 +7,7 @@ declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
     ttq?: {
-      track: (
+      track?: (
         event: string,
         properties?: Record<string, unknown>
       ) => void;

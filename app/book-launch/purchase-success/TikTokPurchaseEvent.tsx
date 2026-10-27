@@ -5,7 +5,7 @@ import { useEffect } from "react";
 declare global {
   interface Window {
     ttq?: {
-      track: (
+      track?: (
         event: string,
         properties?: Record<string, unknown>
       ) => void;
