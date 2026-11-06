@@ -66,13 +66,13 @@ export default function ThreeXGuaranteePage() {
               <span className="mt-2 block text-amber-300">Or get 3X your money back.</span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-200 sm:text-xl">
-              Explore either book for 30 days. If you don&apos;t feel you received value from what you read, the 3X Value Guarantee is designed to put my confidence behind your experience.
+              Read either book for 30 days. If you don&apos;t feel you received value from its content and your claim qualifies under the published terms, the total amount paid to you will equal three times your original purchase price.
             </p>
             <div className="mt-9 inline-flex items-center gap-4 rounded-2xl border border-amber-300/30 bg-amber-300/10 px-5 py-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-300 text-xl font-black text-[#071b33]">3×</div>
               <div>
-                <p className="font-bold text-amber-200">30 days to discover the value</p>
-                <p className="mt-1 text-sm text-slate-300">A bold promise. A clear process. No guesswork.</p>
+                <p className="font-bold text-amber-200">A 30-day opportunity to discover value</p>
+                <p className="mt-1 text-sm text-slate-300">A clear promise: the total payout is 3X what you paid.</p>
               </div>
             </div>
             <a href="#choose-your-book" className="mt-9 inline-flex items-center justify-center rounded-full bg-amber-300 px-8 py-4 font-bold text-[#071b33] transition hover:bg-amber-200">
@@ -139,7 +139,7 @@ export default function ThreeXGuaranteePage() {
             {[
               ["01", "Choose your book", "Select the title and edition that feel right for you."],
               ["02", "Take 30 days", "Read the book and decide whether the experience delivered value."],
-              ["03", "Make your decision", "If you are not satisfied, you can submit a request under the published guarantee terms."],
+              ["03", "Request the guarantee", "If you do not feel you received value, submit your claim within the 30-day window and follow the published claim process."],
             ].map(([number, title, description]) => (
               <div key={number} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
                 <p className="text-sm font-bold tracking-[0.2em] text-amber-300">{number}</p>
@@ -149,7 +149,7 @@ export default function ThreeXGuaranteePage() {
             ))}
           </div>
           <p className="mx-auto mt-9 max-w-3xl text-center text-xs leading-6 text-slate-400">
-            The complete guarantee terms—including the 30-day eligibility window, qualifying purchases, claim process, payout calculation, and any return requirements for physical editions—will be clearly presented before checkout is enabled.
+            If a claim qualifies, the total payment you receive will equal 3 times the original purchase price. That total includes the amount you originally paid; it is not an additional 3X payment on top of a separate refund. The complete terms—including the claim deadline, eligible editions, claim process, payout timing, and any return requirements for physical books—will be published before checkout is enabled.
           </p>
         </div>
       </section>
