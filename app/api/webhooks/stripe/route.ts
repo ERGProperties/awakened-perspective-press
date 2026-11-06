@@ -75,6 +75,27 @@ const products = {
   },
 } as const;
 
+type ShippingAddress = {
+  line1?: string | null;
+  line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postal_code?: string | null;
+  country?: string | null;
+};
+
+type ShippingDetails = {
+  name?: string | null;
+  address?: ShippingAddress | null;
+} | null;
+
+type SessionWithShipping = Stripe.Checkout.Session & {
+  collected_information?: {
+    shipping_details?: ShippingDetails;
+  } | null;
+  shipping_details?: ShippingDetails;
+};
+
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
@@ -126,6 +147,8 @@ export async function POST(request: Request) {
 
   try {
     const session = event.data.object as Stripe.Checkout.Session;
+    const sessionWithShipping =
+      session as SessionWithShipping;
 
     if (
       session.payment_status !== "paid" ||
@@ -184,13 +207,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // Support both newer and older Stripe shipping field structures.
+    const shippingDetails =
+      sessionWithShipping.collected_information
+        ?.shipping_details ??
+      sessionWithShipping.shipping_details ??
+      null;
+
     const shipping =
-      session.shipping_details?.address ??
+      shippingDetails?.address ??
       session.customer_details?.address ??
       null;
 
     const shippingName =
-      session.shipping_details?.name ??
+      shippingDetails?.name ??
       session.customer_details?.name ??
       "Not provided";
 
@@ -227,7 +257,7 @@ export async function POST(request: Request) {
       `Fulfillment: ${fulfillmentMessage}`,
       "",
       `Stripe Checkout Session: ${session.id}`,
-      `Payment status: Paid`,
+      "Payment status: Paid",
     ].join("\n");
 
     const orderNotice = await resend.emails.send(
