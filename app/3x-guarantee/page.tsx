@@ -62,8 +62,8 @@ export default function ThreeXGuaranteePage() {
               An extraordinary offer from Gary Walker
             </p>
             <h1 className="mt-6 font-serif text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
-              Love the experience.
-              <span className="mt-2 block text-amber-300">Or get 3X your money back.</span>
+              Try the book for 30 days.
+              <span className="mt-2 block text-amber-300">Receive a total payout of 3X your purchase price.</span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-200 sm:text-xl">
               Read either book for 30 days. If you don&apos;t feel you received value from its content and your claim qualifies under the published terms, the total amount paid to you will equal three times your original purchase price.
