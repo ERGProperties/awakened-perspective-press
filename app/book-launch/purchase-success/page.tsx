@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Stripe from "stripe";
-import { prisma } from "@/lib/prisma";
-import { createDownloadToken } from "@/lib/download-token";
+
 import PurchasePixel from "./PurchasePixel";
 import GoogleAdsPurchaseConversion from "./GoogleAdsPurchaseConversion";
 import TikTokPurchaseEvent from "./TikTokPurchaseEvent";
@@ -9,7 +8,64 @@ import TikTokPurchaseEvent from "./TikTokPurchaseEvent";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{
+    session_id?: string;
+  }>;
+};
+
+const productNames: Record<
+  string,
+  {
+    name: string;
+    format: string;
+    digital: boolean;
+  }
+> = {
+  "abundance-ebook": {
+    name: "Abundance Abounds",
+    format: "eBook",
+    digital: true,
+  },
+  "abundance-paperback": {
+    name: "Abundance Abounds",
+    format: "Paperback",
+    digital: false,
+  },
+  "abundance-hardcover": {
+    name: "Abundance Abounds",
+    format: "Hardcover",
+    digital: false,
+  },
+  "reflections-ebook": {
+    name: "Understanding External Reflections",
+    format: "eBook",
+    digital: true,
+  },
+  "reflections-paperback": {
+    name: "Understanding External Reflections",
+    format: "Paperback",
+    digital: false,
+  },
+  "reflections-hardcover": {
+    name: "Understanding External Reflections",
+    format: "Hardcover",
+    digital: false,
+  },
+  "bundle-ebook": {
+    name: "Both Books Bundle",
+    format: "eBook Bundle",
+    digital: true,
+  },
+  "bundle-paperback": {
+    name: "Both Books Bundle",
+    format: "Paperback Bundle",
+    digital: false,
+  },
+  "bundle-hardcover": {
+    name: "Both Books Bundle",
+    format: "Hardcover Bundle",
+    digital: false,
+  },
 };
 
 export default async function PurchaseSuccessPage({
@@ -18,45 +74,45 @@ export default async function PurchaseSuccessPage({
   const { session_id: sessionId } = await searchParams;
 
   let paid = false;
-  let email: string | null = null;
-  let downloadUrl: string | null = null;
+  let productName = "";
+  let format = "";
+  let digital = false;
   let purchaseValue = 0;
   let purchaseCurrency = "USD";
 
   if (sessionId && process.env.STRIPE_SECRET_KEY) {
     try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      const stripe = new Stripe(
+        process.env.STRIPE_SECRET_KEY
+      );
+
+      const session =
+        await stripe.checkout.sessions.retrieve(sessionId);
+
+      const key = session.metadata?.product ?? "";
+      const product = productNames[key];
 
       paid =
         session.payment_status === "paid" &&
         session.mode === "payment" &&
-        session.metadata?.product ===
-          "understanding-external-reflections-ebook";
+        Boolean(product);
 
-      if (paid) {
-        email = session.customer_details?.email ?? null;
-        purchaseValue = (session.amount_total ?? 0) / 100;
-        purchaseCurrency = (session.currency ?? "usd").toUpperCase();
+      if (paid && product) {
+        productName = product.name;
+        format = product.format;
+        digital = product.digital;
 
-        const { token, tokenHash } = createDownloadToken(sessionId);
+        purchaseValue =
+          (session.amount_total ?? 0) / 100;
 
-        const purchase = await prisma.purchase.findUnique({
-          where: { downloadTokenHash: tokenHash },
-        });
-
-        if (
-          purchase &&
-          purchase.paymentStatus === "paid" &&
-          purchase.downloadTokenHash === tokenHash &&
-          purchase.downloadExpiresAt &&
-          purchase.downloadExpiresAt > new Date()
-        ) {
-          downloadUrl = `/api/ebook-download?token=${encodeURIComponent(token)}`;
-        }
+        purchaseCurrency =
+          (session.currency ?? "usd").toUpperCase();
       }
     } catch (error) {
-      console.error("Unable to verify purchase success page:", error);
+      console.error(
+        "Unable to verify purchase success page:",
+        error
+      );
     }
   }
 
@@ -92,56 +148,29 @@ export default async function PurchaseSuccessPage({
         {paid ? (
           <>
             <h1 className="mt-6 font-serif text-4xl font-bold sm:text-5xl">
-              Your journey from confusion to clarity begins here.
+              Your order is confirmed.
             </h1>
 
             <p className="mt-6 text-lg leading-8 text-stone-300">
               Thank you for purchasing{" "}
-              <em>Understanding External Reflections</em>.
-            </p>
-
-            <p className="mt-3 text-base italic text-amber-200">
-              A Dialogue with My Inner Being
+              <em>{productName}</em> — {format}.
             </p>
 
             <p className="mt-4 leading-7 text-stone-300">
-              Your purchase has been confirmed. Thank you for joining Gary
-              Walker on this personal exploration of perspective, inner
-              connection, and a different way of understanding experience.
+              Your payment has been received. We appreciate
+              your order and the opportunity to share these
+              perspectives with you.
             </p>
 
-            {downloadUrl ? (
-              <>
-                <p className="mt-4 leading-7 text-stone-300">
-                  Your eBook is ready. Select the button below to download
-                  your copy and begin reading.
-                </p>
-
-                <div className="mt-8">
-                  <a
-                    href={downloadUrl}
-                    className="inline-flex rounded-full bg-amber-300 px-8 py-4 text-lg font-bold text-stone-950 transition hover:bg-amber-200"
-                  >
-                    Download Your eBook
-                  </a>
-                </div>
-
-                <p className="mt-5 text-sm leading-6 text-stone-400">
-                  {email
-                    ? `A backup download link has also been sent to ${email}.`
-                    : "Your download email will serve as a backup."}
-                </p>
-              </>
-            ) : (
-              <p className="mt-4 leading-7 text-stone-300">
-                Your download is being prepared. Please refresh this page
-                shortly. If you received a download email, you can also use
-                the link in that message.
-              </p>
-            )}
+            <p className="mt-4 leading-7 text-stone-300">
+              {digital
+                ? "Your current eBook edition will be personally prepared and sent to you by the publisher in a separate email."
+                : "Your printed edition order is confirmed. Your shipping details were collected securely during checkout."}
+            </p>
 
             <p className="mt-6 text-sm leading-6 text-stone-400">
-              If you need assistance, please contact Awakened Perspective Press.
+              A confirmation email will be sent to the email
+              address provided at checkout.
             </p>
           </>
         ) : (
@@ -151,10 +180,10 @@ export default async function PurchaseSuccessPage({
             </h1>
 
             <p className="mt-6 leading-7 text-stone-300">
-              Your payment may still be processing. Please check your email for
-              confirmation before trying again. If you have already paid and
-              need help accessing your eBook, please contact Awakened
-              Perspective Press.
+              Your payment may still be processing. Please
+              check your email for confirmation before trying
+              again. If you have already paid, contact
+              Awakened Perspective Press for assistance.
             </p>
           </>
         )}

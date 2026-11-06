@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import { createHash } from "node:crypto";
 import Stripe from "stripe";
 import { Resend } from "resend";
-import { prisma } from "@/lib/prisma";
-import { createDownloadToken } from "@/lib/download-token";
 
 export const runtime = "nodejs";
 
@@ -11,89 +8,85 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const publisherEmail = "gary@awakenedperspectivepress.com";
-const metaPixelId = "1057775080418962";
 
-function hashEmail(email: string): string {
-  return createHash("sha256")
-    .update(email.trim().toLowerCase())
-    .digest("hex");
-}
+const products = {
+  "abundance-ebook": {
+    priceId: "price_1UYkIxBFa98ld2VUPKxrJimI",
+    name: "Abundance Abounds",
+    format: "eBook",
+    amount: 799,
+    physical: false,
+  },
+  "abundance-paperback": {
+    priceId: "price_1UYkKiBFa98ld2VUG3Y1tzTe",
+    name: "Abundance Abounds",
+    format: "Paperback",
+    amount: 1799,
+    physical: true,
+  },
+  "abundance-hardcover": {
+    priceId: "price_1UYkLgBFa98ld2VUKBHJf2c2",
+    name: "Abundance Abounds",
+    format: "Hardcover",
+    amount: 2699,
+    physical: true,
+  },
+  "reflections-ebook": {
+    priceId: "price_1UOv0zBFa98ld2VUE4cYbfLP",
+    name: "Understanding External Reflections",
+    format: "eBook",
+    amount: 799,
+    physical: false,
+  },
+  "reflections-paperback": {
+    priceId: "price_1UYkMfBFa98ld2VUUTQTo1tN",
+    name: "Understanding External Reflections",
+    format: "Paperback",
+    amount: 1799,
+    physical: true,
+  },
+  "reflections-hardcover": {
+    priceId: "price_1UYkNQBFa98ld2VUw0wDkXqJ",
+    name: "Understanding External Reflections",
+    format: "Hardcover",
+    amount: 2699,
+    physical: true,
+  },
+  "bundle-ebook": {
+    priceId: "price_1UYkPQBFa98ld2VUgbusDx3W",
+    name: "Both Books Bundle",
+    format: "eBook Bundle",
+    amount: 1399,
+    physical: false,
+  },
+  "bundle-paperback": {
+    priceId: "price_1UYkQLBFa98ld2VUhxE8Hd2L",
+    name: "Both Books Bundle",
+    format: "Paperback Bundle",
+    amount: 3299,
+    physical: true,
+  },
+  "bundle-hardcover": {
+    priceId: "price_1UYkRLBFa98ld2VUSwQ32iX5",
+    name: "Both Books Bundle",
+    format: "Hardcover Bundle",
+    amount: 4999,
+    physical: true,
+  },
+} as const;
 
-async function sendMetaPurchaseEvent({
-  email,
-  sessionId,
-  eventTime,
-}: {
-  email: string;
-  sessionId: string;
-  eventTime: number;
-}): Promise<void> {
-  const accessToken = process.env.META_CONVERSIONS_API_TOKEN;
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
 
-  if (!accessToken) {
-    console.error("Meta Conversions API token is not configured.");
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/v26.0/${metaPixelId}/events?access_token=${encodeURIComponent(accessToken)}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: [
-            {
-              event_name: "Purchase",
-              event_time: eventTime,
-              event_id: `purchase_${sessionId}`,
-              action_source: "website",
-              event_source_url:
-                "https://www.awakenedperspectivepress.com/book-launch/purchase-success",
-              user_data: {
-                em: [hashEmail(email)],
-              },
-              custom_data: {
-                currency: "USD",
-                value: 7.99,
-                content_name:
-                  "Understanding External Reflections: An Unorthodox Conversation",
-                content_type: "product",
-                content_ids: [
-                  "understanding-external-reflections-ebook",
-                ],
-              },
-            },
-          ],
-        }),
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      const details = await response.text();
-
-      console.error(
-        "Meta Purchase event failed:",
-        response.status,
-        details
-      );
-
-      return;
-    }
-
-    const result = await response.json();
-
-    console.info(
-      "Meta Purchase event accepted:",
-      result.events_received
-    );
-  } catch (error) {
-    // Tracking failures must not interrupt a paid order.
-    console.error("Meta Conversions API request failed:", error);
-  }
+    return entities[character];
+  });
 }
 
 export async function POST(request: Request) {
@@ -116,7 +109,10 @@ export async function POST(request: Request) {
       webhookSecret
     );
   } catch (error) {
-    console.error("Stripe signature verification failed:", error);
+    console.error(
+      "Stripe signature verification failed:",
+      error
+    );
 
     return NextResponse.json(
       { error: "Invalid webhook signature." },
@@ -133,116 +129,139 @@ export async function POST(request: Request) {
 
     if (
       session.payment_status !== "paid" ||
-      session.mode !== "payment" ||
-      session.metadata?.product !==
-        "understanding-external-reflections-ebook"
+      session.mode !== "payment"
     ) {
       return NextResponse.json({ received: true });
     }
 
+    const key = session.metadata?.product;
+
+    const product =
+      key && Object.prototype.hasOwnProperty.call(products, key)
+        ? products[key as keyof typeof products]
+        : undefined;
+
     const email = session.customer_details?.email;
-    const priceId = process.env.STRIPE_PRICE_ID;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
     if (
+      !product ||
       !email ||
-      !priceId ||
-      !siteUrl ||
-      session.amount_total === null
-    ) {
-      throw new Error("Missing required checkout details.");
-    }
-
-    const lineItems = await stripe.checkout.sessions.listLineItems(
-      session.id,
-      { limit: 10 }
-    );
-
-    const correctItem = lineItems.data.some(
-      (item) =>
-        item.price?.id === priceId &&
-        item.quantity === 1 &&
-        item.amount_total === 799
-    );
-
-    if (
-      !correctItem ||
-      session.amount_total !== 799 ||
+      session.amount_total !== product.amount ||
       session.currency !== "usd"
     ) {
+      console.error(
+        "Order metadata or amount did not validate.",
+        session.id
+      );
+
       return NextResponse.json(
         { error: "Purchase verification failed." },
         { status: 400 }
       );
     }
 
-    const { token, tokenHash } = createDownloadToken(session.id);
+    const lineItems =
+      await stripe.checkout.sessions.listLineItems(
+        session.id,
+        { limit: 10 }
+      );
 
-    const paymentIntentId =
-      typeof session.payment_intent === "string"
-        ? session.payment_intent
-        : null;
+    const validLineItems =
+      lineItems.data.length === 1 &&
+      lineItems.data[0].price?.id === product.priceId &&
+      lineItems.data[0].quantity === 1 &&
+      lineItems.data[0].amount_total === product.amount;
 
-    const purchase = await prisma.purchase.upsert({
-      where: { stripeSessionId: session.id },
-      create: {
-        stripeSessionId: session.id,
-        stripePaymentIntentId: paymentIntentId,
-        email,
-        amountPaid: session.amount_total,
-        currency: session.currency,
-        paymentStatus: "paid",
-        downloadTokenHash: tokenHash,
-        downloadExpiresAt: new Date(
-          Date.now() + 7 * 24 * 60 * 60 * 1000
-        ),
-      },
-      update: {
-        stripePaymentIntentId: paymentIntentId,
-        email,
-        amountPaid: session.amount_total,
-        currency: session.currency,
-        paymentStatus: "paid",
-      },
-    });
+    if (!validLineItems) {
+      console.error(
+        "Stripe line items did not validate.",
+        session.id
+      );
 
-    // Send the verified purchase to Meta's Conversions API.
-    // The stable event ID helps identify this specific order.
-    await sendMetaPurchaseEvent({
-      email,
-      sessionId: session.id,
-      eventTime: event.created,
-    });
+      return NextResponse.json(
+        { error: "Purchase verification failed." },
+        { status: 400 }
+      );
+    }
 
-    // Send the publisher order notification.
+    const shipping =
+      session.shipping_details?.address ??
+      session.customer_details?.address ??
+      null;
+
+    const shippingName =
+      session.shipping_details?.name ??
+      session.customer_details?.name ??
+      "Not provided";
+
+    const shippingAddress = shipping
+      ? [
+          shipping.line1,
+          shipping.line2,
+          shipping.city,
+          shipping.state,
+          shipping.postal_code,
+          shipping.country,
+        ]
+          .filter(Boolean)
+          .join(", ")
+      : "No shipping address returned by Stripe";
+
+    const fulfillmentMessage = product.physical
+      ? "Printed order. Please forward the shipping details to the printer."
+      : "Digital order. Personally prepare and send the current eBook edition.";
+
+    const orderText = [
+      "NEW 3X GUARANTEE ORDER",
+      "",
+      `Product: ${product.name}`,
+      `Format: ${product.format}`,
+      `Amount paid: $${(product.amount / 100).toFixed(2)} USD`,
+      `Customer: ${shippingName}`,
+      `Customer email: ${email}`,
+      "",
+      product.physical
+        ? `Shipping address: ${shippingAddress}`
+        : "Shipping address: Not applicable",
+      "",
+      `Fulfillment: ${fulfillmentMessage}`,
+      "",
+      `Stripe Checkout Session: ${session.id}`,
+      `Payment status: Paid`,
+    ].join("\n");
+
     const orderNotice = await resend.emails.send(
       {
         from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
         to: [publisherEmail],
         replyTo: email,
-        subject: "New eBook Order — Understanding External Reflections",
+        subject: `New Order — ${product.name} (${product.format})`,
+        text: orderText,
         html: `
-          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#071b33;line-height:1.6">
-            <h1>New eBook Order</h1>
-            <p>A successful payment has been received.</p>
-            <p><strong>Book:</strong> Understanding External Reflections: An Unorthodox Conversation</p>
-            <p><strong>Amount paid:</strong> $7.99 USD</p>
-            <p><strong>Customer email:</strong> ${email}</p>
-            <p><strong>Stripe Checkout Session:</strong> ${session.id}</p>
+          <div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#071b33;line-height:1.6">
+            <h1>New 3X Guarantee Order</h1>
+
+            <p><strong>Product:</strong> ${escapeHtml(product.name)}</p>
+            <p><strong>Format:</strong> ${escapeHtml(product.format)}</p>
+            <p><strong>Amount paid:</strong> $${(product.amount / 100).toFixed(2)} USD</p>
+            <p><strong>Customer:</strong> ${escapeHtml(shippingName)}</p>
+            <p><strong>Customer email:</strong> ${escapeHtml(email)}</p>
+
+            ${
+              product.physical
+                ? `
+                  <h2>Shipping information</h2>
+                  <p>${escapeHtml(shippingAddress)}</p>
+                `
+                : `
+                  <p><strong>Fulfillment:</strong> Personally prepare and send the current eBook edition.</p>
+                `
+            }
+
+            <p><strong>Stripe session:</strong> ${escapeHtml(session.id)}</p>
             <p><strong>Payment status:</strong> Paid</p>
-            <p>The customer download delivery workflow has been processed separately.</p>
-            <p>Awakened Perspective Press</p>
           </div>
         `,
-        text: [
-          "New eBook Order",
-          "",
-          "Book: Understanding External Reflections: An Unorthodox Conversation",
-          "Amount paid: $7.99 USD",
-          `Customer email: ${email}`,
-          `Stripe Checkout Session: ${session.id}`,
-          "Payment status: Paid",
-        ].join("\n"),
       },
       {
         idempotencyKey: `publisher-order-${session.id}`,
@@ -260,69 +279,64 @@ export async function POST(request: Request) {
       );
     }
 
-    console.info(
-      "Publisher order notification processed for session:",
-      session.id
+    const customerMessage = product.physical
+      ? "Your printed edition order is confirmed. Your shipping details have been received, and your order is being prepared."
+      : "Your current eBook edition will be personally prepared and sent to you by the publisher in a separate email.";
+
+    const customerNotice = await resend.emails.send(
+      {
+        from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
+        to: [email],
+        subject: "Your Awakened Perspective Press Order Is Confirmed",
+        text: [
+          `Thank you for purchasing ${product.name} — ${product.format}.`,
+          "",
+          "Your payment has been received and your order is confirmed.",
+          "",
+          customerMessage,
+          "",
+          "Thank you,",
+          "Awakened Perspective Press",
+        ].join("\n"),
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#071b33;line-height:1.6">
+            <h1>Thank you for your order</h1>
+
+            <p>Your purchase of
+              <strong>${escapeHtml(product.name)} — ${escapeHtml(product.format)}</strong>
+              is confirmed.
+            </p>
+
+            <p>Your payment has been received.</p>
+
+            <p>${escapeHtml(customerMessage)}</p>
+
+            <p>Thank you,<br />Awakened Perspective Press</p>
+          </div>
+        `,
+      },
+      {
+        idempotencyKey: `customer-order-confirmation-${session.id}`,
+      }
     );
 
-    // Do not resend the customer delivery email if already sent.
-    if (purchase.emailSentAt) {
-      return NextResponse.json({ received: true });
-    }
-
-    if (
-      !purchase.downloadTokenHash ||
-      !purchase.downloadExpiresAt
-    ) {
-      throw new Error(
-        "Purchase download authorization is incomplete."
+    if (customerNotice.error) {
+      console.error(
+        "Customer confirmation failed:",
+        customerNotice.error
       );
-    }
-
-    const downloadUrl =
-      `${siteUrl}/api/ebook-download?token=${encodeURIComponent(token)}`;
-
-    const result = await resend.emails.send({
-      from: "Awakened Perspective Press <hello@awakenedperspectivepress.com>",
-      to: [email],
-      subject: "Your Understanding External Reflections eBook",
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#071b33;line-height:1.6">
-          <h1>Your eBook is ready</h1>
-          <p>Thank you for purchasing <strong>Understanding External Reflections: An Unorthodox Conversation</strong>.</p>
-          <p>Use the secure link below to download the EPUB. This link expires in seven days.</p>
-          <p style="margin:28px 0">
-            <a href="${downloadUrl}" style="background:#f2b24a;color:#071b33;padding:14px 22px;text-decoration:none;border-radius:8px;font-weight:bold">
-              Download Your eBook
-            </a>
-          </p>
-          <p>If you have trouble downloading your book, reply to this email for assistance.</p>
-          <p>Awakened Perspective Press</p>
-        </div>
-      `,
-    });
-
-    if (result.error) {
-      console.error("Resend delivery email failed:", result.error);
 
       throw new Error(
-        "Unable to send the eBook delivery email."
+        "Unable to send customer confirmation."
       );
     }
-
-    await prisma.purchase.update({
-      where: { stripeSessionId: session.id },
-      data: { emailSentAt: new Date() },
-    });
-
-    console.info(
-      "eBook delivery email sent for session:",
-      session.id
-    );
 
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Stripe webhook processing failed:", error);
+    console.error(
+      "Stripe webhook processing failed:",
+      error
+    );
 
     return NextResponse.json(
       { error: "Webhook processing failed." },

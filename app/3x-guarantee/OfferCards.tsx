@@ -2,45 +2,146 @@
 
 import { useState } from "react";
 
-type Format = "ebook" | "softcover" | "hardcover";
+type Format = "ebook" | "paperback" | "hardcover";
+
+type ProductKey =
+  | "abundance-ebook"
+  | "abundance-paperback"
+  | "abundance-hardcover"
+  | "reflections-ebook"
+  | "reflections-paperback"
+  | "reflections-hardcover"
+  | "bundle-ebook"
+  | "bundle-paperback"
+  | "bundle-hardcover";
 
 const formats: { value: Format; label: string }[] = [
   { value: "ebook", label: "eBook" },
-  { value: "softcover", label: "Softcover" },
+  { value: "paperback", label: "Paperback" },
   { value: "hardcover", label: "Hardcover" },
 ];
 
-function BookOffer({
-  title,
-  subtitle,
-  description,
-  image,
-  price,
-  availableFormats,
-}: {
+const offers: {
   title: string;
   subtitle: string;
   description: string;
   image: string;
-  price?: string;
-  availableFormats: Format[];
+  keys: Record<Format, ProductKey>;
+  prices: Record<Format, string>;
+}[] = [
+  {
+    title: "Understanding External Reflections",
+    subtitle: "A Dialogue with My Inner Being",
+    description:
+      "Explore a different understanding of yourself, your experiences, and the reflections you encounter throughout life. An invitation to question familiar assumptions and look within.",
+    image: "/understanding-external-reflections-mockup.png",
+    keys: {
+      ebook: "reflections-ebook",
+      paperback: "reflections-paperback",
+      hardcover: "reflections-hardcover",
+    },
+    prices: {
+      ebook: "$7.99",
+      paperback: "$17.99",
+      hardcover: "$26.99",
+    },
+  },
+  {
+    title: "Abundance Abounds",
+    subtitle: "More Than Money — A Richer Way to Live",
+    description:
+      "Explore abundance beyond possessions or achievements—through interpretation, possibility, the value of being, and the experience of living.",
+    image: "/abundance-abounds-mockup.png",
+    keys: {
+      ebook: "abundance-ebook",
+      paperback: "abundance-paperback",
+      hardcover: "abundance-hardcover",
+    },
+    prices: {
+      ebook: "$7.99",
+      paperback: "$17.99",
+      hardcover: "$26.99",
+    },
+  },
+  {
+    title: "Both Books",
+    subtitle: "Two Books. Two Perspectives. One Experience.",
+    description:
+      "Explore both books together: a deeper look at inner understanding and a different way to experience abundance and everyday life.",
+    image: "/book-pair-hero.png",
+    keys: {
+      ebook: "bundle-ebook",
+      paperback: "bundle-paperback",
+      hardcover: "bundle-hardcover",
+    },
+    prices: {
+      ebook: "$13.99",
+      paperback: "$32.99",
+      hardcover: "$49.99",
+    },
+  },
+];
+
+function BookOffer({
+  offer,
+}: {
+  offer: (typeof offers)[number];
 }) {
   const [format, setFormat] = useState<Format>("ebook");
-  const isAvailable = availableFormats.includes(format);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function beginCheckout() {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productKey: offer.keys[format],
+        }),
+      });
+
+      const data = (await response.json()) as {
+        url?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !data.url) {
+        throw new Error(
+          data.error || "Unable to start checkout. Please try again."
+        );
+      }
+
+      window.location.assign(data.url);
+    } catch (checkoutError) {
+      setError(
+        checkoutError instanceof Error
+          ? checkoutError.message
+          : "Unable to start checkout. Please try again."
+      );
+
+      setLoading(false);
+    }
+  }
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#102a43] shadow-xl shadow-black/20">
-      <div className="flex h-[380px] shrink-0 items-center justify-center bg-[radial-gradient(ellipse_at_50%_45%,rgba(242,178,74,.16),transparent_60%),linear-gradient(145deg,#102a43,#071b33)] p-8">
-  <img
-  src={image}
-  alt={`${title} hardcover book mockup`}
-  className={`h-[300px] w-[270px] rounded-lg object-contain drop-shadow-2xl ${
-    title === "Understanding External Reflections"
-      ? "scale-[1.25]"
-      : ""
-  }`}
-/>
-</div>
+      <div className="flex h-[340px] shrink-0 items-center justify-center bg-[radial-gradient(ellipse_at_50%_45%,rgba(242,178,74,.16),transparent_60%),linear-gradient(145deg,#102a43,#071b33)] p-8">
+        <img
+          src={offer.image}
+          alt={`${offer.title} book mockup`}
+          className={`h-[280px] w-[270px] rounded-lg object-contain drop-shadow-2xl ${
+            offer.title === "Understanding External Reflections"
+              ? "scale-[1.2]"
+              : ""
+          }`}
+        />
+      </div>
 
       <div className="flex flex-1 flex-col p-7 sm:p-8">
         <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-300">
@@ -48,15 +149,15 @@ function BookOffer({
         </p>
 
         <h3 className="mt-3 font-serif text-3xl font-semibold leading-tight">
-          {title}
+          {offer.title}
         </h3>
 
         <p className="mt-2 text-sm italic leading-6 text-amber-100/90">
-          {subtitle}
+          {offer.subtitle}
         </p>
 
         <p className="mt-4 min-h-[96px] text-sm leading-7 text-slate-300">
-          {description}
+          {offer.description}
         </p>
 
         <div className="mt-7">
@@ -67,7 +168,7 @@ function BookOffer({
           <div
             className="mt-3 grid grid-cols-3 gap-2"
             role="group"
-            aria-label={`Format for ${title}`}
+            aria-label={`Format for ${offer.title}`}
           >
             {formats.map((option) => (
               <button
@@ -88,47 +189,40 @@ function BookOffer({
         </div>
 
         <div className="mt-6 rounded-xl border border-white/10 bg-[#071b33]/70 p-4">
-          {isAvailable ? (
-            <>
-              <p className="text-xs text-slate-400">Current listed price</p>
-              <p className="mt-1 text-2xl font-bold text-amber-300">
-                {price}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                Digital EPUB edition
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-sm font-semibold text-slate-200">
-                {format === "ebook"
-                  ? "Digital edition pricing is being finalized."
-                  : `${format === "softcover" ? "Softcover" : "Hardcover"} edition details are being finalized.`}
-              </p>
-              <p className="mt-1 text-xs leading-5 text-slate-400">
-                We&apos;ll publish the price and ordering details before
-                purchases open.
-              </p>
-            </>
-          )}
+          <p className="text-xs text-slate-400">
+            Your selected edition
+          </p>
+
+          <p className="mt-1 text-2xl font-bold text-amber-300">
+            {offer.prices[format]}
+          </p>
+
+          <p className="mt-1 text-xs leading-5 text-slate-400">
+            {format === "ebook"
+              ? "Digital edition. Your current eBook will be personally delivered by the publisher after purchase."
+              : "Printed edition. Your shipping address will be collected securely at checkout."}
+          </p>
         </div>
 
         <button
           type="button"
-          disabled
-          className="mt-5 inline-flex w-full cursor-not-allowed items-center justify-center rounded-full border border-amber-300/30 bg-amber-300/10 px-6 py-4 text-sm font-bold text-amber-100/70"
-          aria-describedby={`${title.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-availability`}
+          onClick={beginCheckout}
+          disabled={loading}
+          className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-amber-300 px-6 py-4 text-sm font-bold text-[#071b33] transition hover:bg-amber-200 disabled:cursor-wait disabled:opacity-60"
         >
-          Purchasing opens soon
+          {loading
+            ? "Opening secure checkout…"
+            : "Take the Insane Offer While It Lasts"}
         </button>
 
-        <p
-          id={`${title.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-availability`}
-          className="mt-3 text-center text-xs leading-5 text-slate-400"
-        >
-          Checkout will open once edition pricing and the complete 3X guarantee
-          terms are finalized.
-        </p>
+        {error && (
+          <p
+            role="alert"
+            className="mt-3 text-center text-sm text-rose-300"
+          >
+            {error}
+          </p>
+        )}
       </div>
     </article>
   );
@@ -136,23 +230,10 @@ function BookOffer({
 
 export default function OfferCards() {
   return (
-    <div className="grid gap-7 lg:grid-cols-2">
-      <BookOffer
-        title="Understanding External Reflections"
-        subtitle="A Dialogue with My Inner Being"
-        description="Explore a different understanding of yourself, your experiences, and the reflections you encounter throughout life. An invitation to question familiar assumptions and look within."
-        image="/understanding-external-reflections-mockup.png"
-        price="$7.99"
-        availableFormats={["ebook"]}
-      />
-
-      <BookOffer
-        title="Abundance Abounds"
-        subtitle="Moving beyond understanding to experiencing life differently."
-        description="Explore abundance beyond possessions or achievements—through interpretation, possibility, the value of being, and the experience of living."
-        image="/abundance-abounds-mockup.png"
-        availableFormats={[]}
-      />
+    <div className="grid gap-7 lg:grid-cols-3">
+      {offers.map((offer) => (
+        <BookOffer key={offer.title} offer={offer} />
+      ))}
     </div>
   );
 }
