@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Gift, PackageCheck, Sparkles } from "lucide-react";
@@ -51,7 +51,7 @@ const books = [
     title: "Finding Greatest Joy",
     theme: "JOY",
     description:
-      "A dialogue-driven journey into the joy of living—exploring how clarity, purpose, meaning, and the experience itself can become part of the reward.",
+      "A dialogue-driven journey into the joy of livingâ€”exploring how clarity, purpose, meaning, and the experience itself can become part of the reward.",
     image: "/finding-greatest-joy-mockup.png",
     product: "finding-greatest-joy-hardcover",
   },
@@ -84,7 +84,7 @@ function BoxSetArtwork() {
     <div className="relative mx-auto w-full max-w-[700px] overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl shadow-black/40">
       <Image
         src="/conversations-with-my-inner-being-hero.png"
-        alt="Conversations With My Inner Being — the complete three-book collection by Gary Walker"
+        alt="Conversations With My Inner Being â€” the complete three-book collection by Gary Walker"
         width={1536}
         height={1024}
         priority
@@ -96,13 +96,6 @@ function BoxSetArtwork() {
 }
 
 export default function ConversationsWithMyInnerBeingPage() {
-<<<<<<< Updated upstream
-=======
-  const standardShippingConfigured = Boolean(
-    process.env.STRIPE_SHIPPING_RATE_ID_STANDARD
-  );
-
->>>>>>> Stashed changes
   const priceIds: Record<string, string | undefined> = {
     "understanding-external-reflections-hardcover":
       process.env.STRIPE_PRICE_ID_UER_HARDCOVER,
@@ -236,7 +229,7 @@ export default function ConversationsWithMyInnerBeingPage() {
                 className="rounded-2xl border border-white/10 bg-white/[.04] p-6 text-left"
               >
                 <p className="text-sm font-bold tracking-[.2em] text-amber-300">
-                  {number} · {theme}
+                  {number} Â· {theme}
                 </p>
                 <h3 className="mt-4 font-serif text-2xl font-semibold">
                   {title}
@@ -285,7 +278,7 @@ export default function ConversationsWithMyInnerBeingPage() {
 
                 <div className="flex flex-1 flex-col pt-6">
                   <p className="text-xs font-bold uppercase tracking-[.24em] text-amber-300">
-                    Book {book.number} · {book.theme}
+                    Book {book.number} Â· {book.theme}
                   </p>
 
                   <h3 className="mt-3 font-serif text-2xl font-semibold leading-tight">
@@ -304,23 +297,14 @@ export default function ConversationsWithMyInnerBeingPage() {
                       $26.99
                     </p>
                   </div>
-<<<<<<< Updated upstream
-                  <PurchaseButton product={book.product} configured={Boolean(priceIds[book.product])} label={`Purchase hardcover — $26.99`} />
-                  <p className="mt-3 text-center text-xs text-slate-400">Free U.S. shipping included.</p>
-=======
-
                   <PurchaseButton
                     product={book.product}
-                    configured={Boolean(
-                      priceIds[book.product] && standardShippingConfigured
-                    )}
+                    configured={Boolean(priceIds[book.product])}
                     label="Purchase hardcover — $26.99"
                   />
-
                   <p className="mt-3 text-center text-xs text-slate-400">
-                    Shipping calculated at checkout.
+                    Free U.S. shipping included.
                   </p>
->>>>>>> Stashed changes
                 </div>
               </article>
             ))}
@@ -448,7 +432,7 @@ export default function ConversationsWithMyInnerBeingPage() {
 
             <p className="mt-6 text-lg leading-8 text-slate-300">
               Own all three hardcover books together in the{" "}
-              <em>Conversations With My Inner Being</em> boxed set—a collection
+              <em>Conversations With My Inner Being</em> boxed setâ€”a collection
               that moves through Perspective, Abundance, and Joy.
             </p>
 
@@ -495,7 +479,7 @@ export default function ConversationsWithMyInnerBeingPage() {
             </div>
 
             <p className="mt-2 text-sm text-slate-400">
-              Introductory pricing · Free U.S. shipping
+              Introductory pricing Â· Free U.S. shipping
             </p>
 
             <div className="my-7 border-t border-white/10" />
@@ -524,7 +508,7 @@ export default function ConversationsWithMyInnerBeingPage() {
               configured={Boolean(
                 priceIds["conversations-with-my-inner-being-box-set"]
               )}
-              label="Get the complete box set — $69.99"
+              label="Get the complete box set â€” $69.99"
             />
 
             <p className="mt-4 text-center text-xs leading-5 text-slate-400">
@@ -547,7 +531,7 @@ export default function ConversationsWithMyInnerBeingPage() {
           </p>
 
           <p className="mt-5 text-sm leading-7 text-slate-400">
-            By Gary Walker · Awakened Perspective Press
+            By Gary Walker Â· Awakened Perspective Press
           </p>
         </div>
       </section>
@@ -555,7 +539,7 @@ export default function ConversationsWithMyInnerBeingPage() {
       {/* Footer */}
       <footer className="border-t border-white/10 px-5 py-8 text-center text-sm text-slate-400">
         <p>
-          © {new Date().getFullYear()} Awakened Perspective Press. All rights
+          Â© {new Date().getFullYear()} Awakened Perspective Press. All rights
           reserved.
         </p>
 

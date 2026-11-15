@@ -25,8 +25,11 @@ export default function PurchasePixel({
     const storageKey = `meta-purchase-${sessionId}`;
     let attempts = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let cancelled = false;
 
     const firePurchase = () => {
+      if (cancelled) return;
+
       if (sessionStorage.getItem(storageKey) === "sent") return;
 
       if (typeof window.fbq === "function") {
@@ -47,3 +50,14 @@ export default function PurchasePixel({
         timer = setTimeout(firePurchase, 100);
       }
     };
+
+    firePurchase();
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
+  }, [sessionId, value, currency]);
+
+  return null;
+}
