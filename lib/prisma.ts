@@ -1,5 +1,9 @@
+import { loadEnvConfig } from "@next/env";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/app/generated/prisma/client";
+
+// Explicitly load Next.js environment files before accessing variables.
+loadEnvConfig(process.cwd());
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
