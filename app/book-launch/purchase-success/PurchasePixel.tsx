@@ -47,13 +47,3 @@ export default function PurchasePixel({
         timer = setTimeout(firePurchase, 100);
       }
     };
-
-    firePurchase();
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [sessionId, value, currency]);
-
-  return null;
-}
