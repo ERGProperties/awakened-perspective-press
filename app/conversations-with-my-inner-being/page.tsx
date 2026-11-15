@@ -137,7 +137,6 @@ function BoxSetArtwork() {
 }
 
 export default function ConversationsWithMyInnerBeingPage() {
-  const standardShippingConfigured = Boolean(process.env.STRIPE_SHIPPING_RATE_ID_STANDARD);
   const priceIds: Record<string, string | undefined> = {
     "understanding-external-reflections-hardcover": process.env.STRIPE_PRICE_ID_UER_HARDCOVER,
     "abundance-abounds-hardcover": process.env.STRIPE_PRICE_ID_ABUNDANCE_HARDCOVER,
@@ -225,8 +224,8 @@ export default function ConversationsWithMyInnerBeingPage() {
                     <p className="text-xs text-slate-400">Hardcover edition</p>
                     <p className="mt-1 text-2xl font-bold text-amber-300">$26.99</p>
                   </div>
-                  <PurchaseButton product={book.product} configured={Boolean(priceIds[book.product] && standardShippingConfigured)} label={`Purchase hardcover — $26.99`} />
-                  <p className="mt-3 text-center text-xs text-slate-400">Shipping calculated at checkout.</p>
+                  <PurchaseButton product={book.product} configured={Boolean(priceIds[book.product])} label={`Purchase hardcover — $26.99`} />
+                  <p className="mt-3 text-center text-xs text-slate-400">Free U.S. shipping included.</p>
                 </div>
               </article>
             ))}
