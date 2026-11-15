@@ -96,6 +96,68 @@ async function sendMetaPurchaseEvent({
   }
 }
 
+
+const PHYSICAL: Record<string, { env: string; label: string; cents: number; box?: boolean }> = {
+  "understanding-external-reflections-hardcover": { env:"STRIPE_PRICE_ID_UER_HARDCOVER", label:"Understanding External Reflections — Hardcover", cents:2699 },
+  "abundance-abounds-hardcover": { env:"STRIPE_PRICE_ID_ABUNDANCE_HARDCOVER", label:"Abundance Abounds — Hardcover", cents:2699 },
+  "finding-greatest-joy-hardcover": { env:"STRIPE_PRICE_ID_FINDING_JOY_HARDCOVER", label:"Finding Greatest Joy — Hardcover", cents:2699 },
+  "conversations-with-my-inner-being-box-set": { env:"STRIPE_PRICE_ID_CONVERSATIONS_BOX_SET", label:"Conversations With My Inner Being — Three-Book Hardcover Box Set", cents:6999, box:true },
+};
+type ShipDetails = { name?:string|null; address?:{line1?:string|null;line2?:string|null;city?:string|null;state?:string|null;postal_code?:string|null;country?:string|null}|null };
+function htmlSafe(s:string):string {
+  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c] ?? c));
+}
+async function processPhysicalOrder(session:Stripe.Checkout.Session):Promise<void> {
+  const product=PHYSICAL[session.metadata?.product ?? ""];
+  if (!product) throw new Error("Unknown physical book product.");
+  const email=session.customer_details?.email ?? session.customer_email;
+  const priceId=process.env[product.env];
+  if (session.payment_status!=="paid" || session.mode!=="payment" || !email || !priceId ||
+      session.amount_total!==product.cents || session.currency!=="usd") {
+    throw new Error("Physical order payment verification failed.");
+  }
+  const items=await stripe.checkout.sessions.listLineItems(session.id,{limit:5});
+  if (!items.data.some(i=>i.price?.id===priceId && i.quantity===1 && i.amount_total===product.cents)) {
+    throw new Error("Physical order line item verification failed.");
+  }
+  const s=session as Stripe.Checkout.Session & {
+    collected_information?:{shipping_details?:ShipDetails|null};
+    shipping_details?:ShipDetails|null;
+  };
+  const ship=s.collected_information?.shipping_details ?? s.shipping_details;
+  const a=ship?.address;
+  if (!a?.line1 || !a.postal_code) throw new Error("Paid physical order has no complete shipping address.");
+  const address=[ship?.name,a.line1,a.line2,[a.city,a.state,a.postal_code].filter(Boolean).join(", "),a.country].filter(Boolean).join("\n");
+  const intent=typeof session.payment_intent==="string"?session.payment_intent:null;
+  const purchase=await prisma.purchase.upsert({
+    where:{stripeSessionId:session.id},
+    create:{stripeSessionId:session.id,stripePaymentIntentId:intent,email,productName:product.label,amountPaid:session.amount_total,currency:session.currency,paymentStatus:"paid"},
+    update:{stripePaymentIntentId:intent,email,productName:product.label,amountPaid:session.amount_total,currency:session.currency,paymentStatus:"paid"},
+  });
+  if (purchase.emailSentAt) return;
+  const amount=(session.amount_total/100).toFixed(2);
+  const fulfillment=product.box
+    ? "BOX SET: Fulfill three hardcovers — Understanding External Reflections, Abundance Abounds, and Finding Greatest Joy — PLUS one complimentary paperback of Awakening: A Different Perspective Is a Better Understanding."
+    : "Fulfill one hardcover copy of the purchased title.";
+  const pub=await resend.emails.send({
+    from:"Awakened Perspective Press <hello@awakenedperspectivepress.com>",to:[publisherEmail],replyTo:email,
+    subject:"PAID PHYSICAL BOOK ORDER — "+product.label,
+    html:"<h1>New Paid Physical Book Order</h1><p><b>Product:</b> "+htmlSafe(product.label)+"</p><p><b>Amount paid:</b> $"+amount+" USD</p><p><b>Customer:</b> "+htmlSafe(email)+"</p><p><b>Stripe session:</b> "+htmlSafe(session.id)+"</p><h2>Ship to</h2><p>"+htmlSafe(address).replace(/\n/g,"<br>")+"</p><h2>Printer fulfillment instructions</h2><p>"+htmlSafe(fulfillment)+"</p><p>Free U.S. shipping. Arrange printing and shipment manually; no shipment is booked automatically.</p>",
+    text:["PAID PHYSICAL BOOK ORDER","Product: "+product.label,"Amount paid: $"+amount+" USD","Customer: "+email,"Stripe session: "+session.id,"","SHIP TO",address,"","PRINTER INSTRUCTIONS",fulfillment,"Free U.S. shipping. Arrange printing and shipment manually."].join("\n"),
+  },{idempotencyKey:"publisher-order-"+session.id});
+  if(pub.error) throw new Error("Publisher order notification failed: "+pub.error.message);
+  const customer=await resend.emails.send({
+    from:"Awakened Perspective Press <hello@awakenedperspectivepress.com>",to:[email],
+    subject:"Your Awakened Perspective Press order is confirmed",
+    html:"<h1>Thank you for your order.</h1><p>We received your payment for <b>"+htmlSafe(product.label)+"</b>.</p><p>Amount paid: $"+amount+" USD.</p><p>Your order includes free shipping within the United States.</p>"+
+      (product.box?"<p>Your box set includes all three hardcover books and a complimentary paperback copy of <i>Awakening: A Different Perspective Is a Better Understanding</i>.</p>":"")+
+      "<p>We will use the shipping address provided at checkout to arrange fulfillment.</p><p>Awakened Perspective Press</p>",
+    text:["Thank you for your order.","Product: "+product.label,"Amount paid: $"+amount+" USD","Free U.S. shipping.",...(product.box?["Includes three hardcovers plus a complimentary paperback of Awakening: A Different Perspective Is a Better Understanding."]:[]),"We will use your checkout shipping address to arrange fulfillment."].join("\n"),
+  },{idempotencyKey:"customer-order-confirmation-"+session.id});
+  if(customer.error) throw new Error("Customer order confirmation failed: "+customer.error.message);
+  await prisma.purchase.update({where:{stripeSessionId:session.id},data:{emailSentAt:new Date()}});
+}
+
 export async function POST(request: Request) {
   const signature = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -130,6 +192,11 @@ export async function POST(request: Request) {
 
   try {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    if (session.metadata?.order_type === "physical_book") {
+      await processPhysicalOrder(session);
+      return NextResponse.json({ received: true });
+    }
 
     if (
       session.payment_status !== "paid" ||
