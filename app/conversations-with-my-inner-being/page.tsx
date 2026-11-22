@@ -331,14 +331,18 @@ export default function ConversationsWithMyInnerBeingPage() {
                   </p>
 
                   {book.freeEbook && (
-                    <div className="mt-6 rounded-xl border border-emerald-300/30 bg-emerald-300/[.07] p-4">
-                      <p className="font-bold text-emerald-200">
-                        Start here — FREE eBook
-                      </p>
-                      <p className="mt-1 text-xs leading-6 text-slate-300">
-                        Experience the first book digitally at no cost.
-                      </p>
-                    </div>
+                    <a
+                      href="#free-ebook"
+                      className="mt-6 block rounded-xl border border-emerald-300/40 bg-emerald-300/[.08] p-4 transition hover:border-emerald-200 hover:bg-emerald-300/[.14] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#102a43]"
+                      aria-label="Get the free eBook: go to the name and email signup form"
+                    >
+                      <span className="block font-bold text-emerald-200">
+                        Start here — FREE eBook <ArrowRight className="ml-1 inline h-4 w-4" />
+                      </span>
+                      <span className="mt-1 block text-xs leading-6 text-slate-300">
+                        Click to receive the first book digitally at no cost.
+                      </span>
+                    </a>
                   )}
 
                   <PurchaseButton
@@ -360,7 +364,7 @@ export default function ConversationsWithMyInnerBeingPage() {
       {/* FREE EBOOK */}
       <section
         id="free-ebook"
-        className="relative overflow-hidden border-y border-amber-200/20 bg-[radial-gradient(ellipse_at_50%_0%,rgba(242,178,74,.18),transparent_55%),linear-gradient(145deg,#102a43,#071b33)] px-5 py-20 sm:px-8 sm:py-28"
+        className="scroll-mt-8 relative overflow-hidden border-y border-amber-200/20 bg-[radial-gradient(ellipse_at_50%_0%,rgba(242,178,74,.18),transparent_55%),linear-gradient(145deg,#102a43,#071b33)] px-5 py-20 sm:px-8 sm:py-28"
       >
         <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
           <div className="mx-auto w-full max-w-[360px]">
@@ -510,10 +514,10 @@ export default function ConversationsWithMyInnerBeingPage() {
 
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link
-              href="/contact"
+              href="/conversations-with-my-inner-being/share-your-perspective"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-300 px-7 py-4 font-bold text-[#071b33] transition hover:bg-amber-200"
             >
-              Join the conversation
+              Share Your Perspective
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
