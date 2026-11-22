@@ -17,6 +17,7 @@ export default function PurchaseButton({
 
   async function checkout() {
     if (!configured || loading) return;
+
     setLoading(true);
     setError("");
 
@@ -26,6 +27,7 @@ export default function PurchaseButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ product }),
       });
+
       const data = await response.json();
 
       if (!response.ok || !data.url) {
@@ -47,11 +49,25 @@ export default function PurchaseButton({
         disabled={!configured || loading}
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-300 px-5 py-4 text-sm font-bold text-[#071b33] transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:border disabled:border-white/10 disabled:bg-white/10 disabled:text-slate-400"
       >
-        {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
-        {loading ? "Opening secure checkout..." : configured ? label : "Purchasing opens soon"}
+        {loading ? (
+          <LoaderCircle className="h-4 w-4 animate-spin" />
+        ) : (
+          <ArrowRight className="h-4 w-4" />
+        )}
+        {loading ? "Opening secure checkout..." : configured ? label : "Checkout setup needed"}
       </button>
-      {error && <p role="alert" className="mt-3 text-center text-xs text-red-300">{error}</p>}
-      {!configured && <p className="mt-3 text-center text-xs leading-5 text-slate-400">Ordering will open as soon as the Stripe product and shipping settings are connected.</p>}
+
+      {error && (
+        <p role="alert" className="mt-3 text-center text-xs text-red-300">
+          {error}
+        </p>
+      )}
+
+      {!configured && (
+        <p className="mt-3 text-center text-xs leading-5 text-slate-400">
+          This paperback&apos;s Stripe Price ID has not been connected yet.
+        </p>
+      )}
     </div>
   );
 }
