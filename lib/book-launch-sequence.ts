@@ -13,113 +13,119 @@ const FROM_EMAIL =
   "Awakened Perspective Press <noreply@awakenedperspectivepress.com>";
 
 const REPLY_TO = "hello@awakenedperspectivepress.com";
-
 const unsubscribeSecret = process.env.EMAIL_UNSUBSCRIBE_SECRET;
 
 export const BOOK_LAUNCH_EMAILS = [
   {
-    subject: "Welcome to a Different Perspective",
-    heading: "Welcome",
+    subject: "What if life could be experienced differently?",
+    heading: "A Different Perspective",
     paragraphs: [
-      "Thank you for joining me on the journey behind Understanding External Reflections: An Unorthodox Conversation.",
-      "I didn't set out to write a book. I was exploring questions about life, reality, manifestation, and why the way we feel inside doesn't always seem to match what we see happening around us.",
-      "What began as a conversation gradually changed the questions I was asking.",
-      "Instead of constantly wondering, When will things change? Where is the evidence? What am I missing? I began to explore something different.",
-      "What if I didn't need to figure everything out before I could enjoy my life?",
-      "That question opened a door I hadn't expected.",
-      "Over the next few days, I'll share some of the reflections that emerged along the way. You don't have to agree with them. You don't have to adopt a new philosophy. I'm simply inviting you to investigate your own experience and see what resonates.",
-      "For now, here's a question to carry with you: What if you don't need another answer to begin experiencing life differently?",
+      "When you begin Understanding External Reflections, I invite you to approach it with curiosity rather than the expectation that you must agree with every idea.",
+      "The book grew out of a simple but powerful exploration: how much of what we experience is shaped by the meaning we give to what happens?",
+      "An event takes place. We interpret it through our expectations, memories, assumptions, and beliefs. Then we often respond to that interpretation as though it were the only possible way to see things.",
+      "What changes when we become curious about that process?",
+      "This isn't about pretending difficult circumstances don't exist or convincing ourselves that everything is wonderful. It's about recognizing that our first interpretation may not be the only one available to us.",
+      "As you read, give yourself permission to pause, question, and notice what resonates with your own experience. You don't need to reach a conclusion. The investigation itself can be valuable.",
+      "Here's something to consider: What might become possible if you allowed yourself to see a familiar part of your life from a different perspective?"
     ],
   },
   {
-    subject: "What If Your Perspective Is Part of the Picture?",
-    heading: "A Different Way of Seeing",
-    paragraphs: [
-      "Have you ever experienced something, decided what it meant, and then reacted to that interpretation as though it were the only possible explanation?",
-      "It happens to all of us.",
-      "Someone says something unexpected. An opportunity doesn't materialize. A plan falls apart. Almost immediately, our minds begin constructing a story about what happened and what it means for us.",
-      "But there's a distinction worth investigating: What happened isn't always the same as what we believe happened.",
-      "That doesn't mean the circumstances aren't real. It doesn't mean every difficult experience has a hidden positive meaning. And it certainly doesn't mean we're responsible for everything that happens to us.",
-      "It means we can become curious about the part we play in interpreting our experiences.",
-      "Two people can encounter the same situation and understand it differently. Our expectations, memories, and assumptions influence what we notice and how we respond.",
-      "Sometimes a new perspective doesn't change the event itself. It changes what becomes possible for us to see and do next.",
-      "Think of a situation you've been interpreting in one particular way. Ask yourself: What do I actually know, and what am I assuming?",
-      "You don't have to replace your original interpretation with a more positive one. Just allow room for another possibility.",
-      "You may discover something interesting. And even if you don't, you've given yourself permission to question rather than automatically accept the first story that comes to mind.",
-      "That's where a different perspective begins.",
-    ],
-  },
-  {
-    subject: "The Space Between What Happens and What We Experience",
+    subject: "The space between what happens and what we experience",
     heading: "The Space Between",
     paragraphs: [
-      "Imagine receiving unexpected news.",
-      "Before you've had time to understand what happened, your mind is already considering what it means, what might happen next, and what you should do about it.",
-      "Within seconds, one event can become an entire story about your future.",
-      "I've become increasingly interested in the space between what happens and how we experience it.",
-      "In that space, we can begin to notice our assumptions, expectations, emotions, and interpretations. We can recognize when we're responding to the actual situation and when we're reacting to what we fear it might mean.",
-      "This isn't about suppressing emotions or forcing ourselves to remain positive.",
-      "Sometimes disappointment is disappointment. Uncertainty is uncertainty. And some circumstances genuinely require difficult decisions and practical action.",
-      "The opportunity is to become aware of our experience before automatically allowing our first reaction to determine our next move.",
-      "Something doesn't go according to plan. One response is to conclude, This isn't working. I've made the wrong decision.",
-      "Another is to pause and ask: What actually happened? What do I know now that I didn't know before? What options do I have from here?",
-      "The circumstances may be exactly the same. But the questions you ask can open up a different way of responding.",
-      "The next time something catches you off guard, pause. Notice what happened. Notice the story you're telling yourself. Then investigate what comes next.",
-      "You don't have to solve your entire life in that moment. Sometimes awareness is enough to help you see the next step more clearly.",
+      "There is often a moment between an event and our response to it, even if that moment feels very small.",
+      "Something happens. A conversation takes an unexpected turn. A plan changes. An opportunity doesn't appear. Almost immediately, we can begin telling ourselves what it means and what is likely to happen next.",
+      "But what happened and the story we formed about what happened are not necessarily the same thing.",
+      "When we notice that distinction, we create room to investigate. What do I actually know? What am I assuming? What else might be worth considering?",
+      "The purpose isn't to replace every uncomfortable thought with a positive one. It is to become more aware of how we are experiencing life, so our next response can come from greater clarity rather than automatic reaction.",
+      "Try this the next time something surprises you: take a breath, notice the interpretation forming, and give yourself permission not to settle on an answer immediately.",
+      "Sometimes a little space is enough to reveal a choice you couldn't see while caught up in the first reaction."
     ],
   },
   {
-    subject: "The Confidence to Not Know",
-    heading: "The Confidence to Not Know",
+    subject: "Moving from understanding to experiencing abundance",
+    heading: "The Experience of Abundance",
     paragraphs: [
-      "For a long time, I thought confidence meant knowing.",
-      "Knowing what I was doing. Knowing where I was going. Knowing that a decision was right and that an opportunity would work out.",
-      "The problem was that life rarely offered the certainty I wanted.",
-      "So I kept searching. Another answer. Another realization. Another sign that I was finally moving in the right direction.",
-      "Eventually, a different possibility emerged.",
-      "What if confidence isn't knowing what will happen, but trusting yourself to navigate what does?",
-      "Think about that for a moment.",
-      "You can make a decision without knowing exactly where it will lead. You can explore an opportunity without having a guarantee. You can change your mind when new information appears.",
-      "You can discover that you were mistaken without treating that discovery as a personal failure.",
-      "Not knowing doesn't have to mean you're lost. It can simply mean the next part of the experience hasn't happened yet.",
-      "Of course, there are times when we need to gather information, consider risks, and make careful plans. This isn't an invitation to ignore reality or abandon responsibility.",
-      "It's an invitation to recognize that no amount of thinking can give us complete certainty about everything that lies ahead.",
-      "What would you explore if you trusted yourself to respond to whatever you discovered?",
-      "You don't need to know the entire path before taking a reasonable next step. Sometimes the confidence comes not from predicting the outcome, but from being willing to meet it when it arrives.",
+      "Understanding a different perspective can change the questions we ask. But eventually, understanding invites us into something more: experiencing life differently.",
+      "That is where Abundance Abounds continues the conversation.",
+      "Abundance is often treated as something we will experience once we have acquired enough, achieved enough, or reached a particular destination. That way of thinking can keep fulfillment permanently somewhere in the future.",
+      "What if abundance is also a way of experiencing the life that is already unfolding? What if appreciation, possibility, curiosity, and the freedom to participate in each moment are part of the experience—not merely rewards waiting at the finish line?",
+      "This doesn't mean ignoring practical needs, giving up goals, or pretending that circumstances never matter. It means exploring whether the pursuit of more has distracted us from experiencing what is already here.",
+      "As you continue reading your free eBook, notice the moments when your attention moves entirely toward what is missing. Then gently ask: What is available to appreciate, explore, or experience right now?",
+      "Abundance becomes more meaningful when it is something we live, not simply something we wait to possess."
     ],
   },
   {
-    subject: "The Creation: What Will You Do With This Moment?",
-    heading: "The Creation",
+    subject: "What if the experience is the reward?",
+    heading: "Living Abundance",
     paragraphs: [
-      "When I first thought about creation, I thought about creating something.",
-      "A business. A book. An opportunity. A future.",
-      "I imagined creation as the process of making something happen and eventually reaching the result I wanted.",
-      "But as the conversations behind Understanding External Reflections unfolded, my perspective began to change.",
-      "What if creation isn't only about the things we're trying to bring into existence? What if it's also about experiencing what is unfolding right now?",
-      "As I write these words, I don't know what the next sentence will be until I write it. The next conversation hasn't happened. The next idea hasn't arrived. The next experience is still unknown.",
-      "And rather than seeing that uncertainty as a problem, I can approach it with curiosity.",
-      "What interests me? What inspires me? What do I appreciate about this moment? What might I like to explore?",
-      "That doesn't mean giving up on goals or refusing to take action. I still have ideas, ambitions, and things I want to create.",
-      "The difference is that I don't need the outcome of those things to determine whether the present moment has value.",
-      "I can want something without needing it to feel fulfilled. I can pursue an opportunity without demanding that it unfold exactly as imagined. I can take action without knowing where the path will lead.",
-      "And when something unexpected happens, I can investigate rather than immediately deciding what it means.",
-      "For me, that is where L.I.V.E. comes in: Love. Investigate. Venture. Enjoy.",
-      "Love the moment. Investigate your curiosity. Venture when something draws you forward. Enjoy the unfolding.",
-      "These aren't rules you have to follow perfectly. They're reminders to experience the life that's actually happening rather than becoming so focused on the future that you miss the present.",
-      "Understanding External Reflections: An Unorthodox Conversation grew out of the questions, unexpected insights, and discoveries that changed the way I approach my own experience.",
-      "It isn't a set of instructions telling you what to believe. It's an invitation to question, reflect, and discover what a different perspective might open up for you.",
-      "Whatever you choose to do next, here's one final question: What is creating itself in your life right now—and what might happen if you simply became curious enough to find out?",
-      "Thank you for being part of this journey.",
+      "We can become so focused on the result we hope to achieve that the experience required to get there becomes something we simply endure.",
+      "We work toward the next milestone, the next purchase, the next opportunity, or the next version of life. And when we reach it, our attention may already have moved to whatever comes after.",
+      "Abundance Abounds explores a different possibility: that the experience itself has value, and that life doesn't have to be postponed until a particular outcome arrives.",
+      "You can have ambitions and still appreciate the present. You can want change without treating today as an obstacle. You can take meaningful action while remaining open to what the journey reveals.",
+      "Consider something you are currently working toward. What part of the experience could you appreciate today, rather than reserving all your satisfaction for the eventual result?",
+      "This is not a request to settle or stop growing. It is an invitation to include the journey in what you are creating.",
+      "What if the experience is not merely the path to the reward? What if the experience is part of the reward itself?"
+    ],
+  },
+  {
+    subject: "The internal shift that opens the door to joy",
+    heading: "Finding Greatest Joy",
+    paragraphs: [
+      "There is a natural progression in this journey. First, we investigate how we understand our experiences. Then we begin exploring what it means to live with a greater sense of abundance.",
+      "Finding Greatest Joy takes the conversation another step inward.",
+      "Joy is often treated as a response to circumstances: something good happens, and then we feel happy. But what if discovering joy also involves an internal shift in how we relate to life?",
+      "That shift doesn't require every circumstance to be perfect. It doesn't ask us to deny sadness, disappointment, or uncertainty. It invites us to recognize that our capacity to experience life is not limited to waiting for everything outside us to line up.",
+      "When our attention changes, what we notice can change. When what we notice changes, new possibilities for experiencing the moment may become visible.",
+      "Think about a time when you felt genuinely engaged in life—not because everything was exactly as planned, but because you were present in the experience. What was different about the way you were relating to that moment?",
+      "Perhaps the discovery of joy begins less with controlling life and more with changing how we participate in it."
+    ],
+  },
+  {
+    subject: "Could freedom and joy be two sides of the same experience?",
+    heading: "The Freedom to Enjoy Life",
+    paragraphs: [
+      "I've been exploring the relationship between freedom and joy, and I keep returning to the possibility that they are deeply connected.",
+      "Freedom is often described as having the ability to choose what we do. But there is another kind of freedom worth considering: the freedom to experience the moment without making our well-being entirely dependent on a particular outcome.",
+      "When we believe we must control every detail before we can relax, our attention can become consumed by what might go wrong. When we allow ourselves to participate without demanding certainty, a different experience becomes possible.",
+      "This doesn't mean abandoning discernment or responsibility. We still make choices, set boundaries, and take practical action. The difference is that we don't have to turn every unknown into a threat or every delay into a verdict on our lives.",
+      "Could joy be the experience of being free to engage with life as it unfolds? And could freedom become more meaningful when it allows us to experience greater joy?",
+      "You might consider: Where am I waiting for permission, certainty, or a particular result before allowing myself to enjoy the life I'm living?",
+      "The question isn't whether circumstances matter. It is whether we can discover more freedom in the way we meet them."
+    ],
+  },
+  {
+    subject: "When we stop forcing, we can begin to listen",
+    heading: "Allowing Life to Unfold",
+    paragraphs: [
+      "Sometimes our effort to make life happen can become so constant that we leave little room to notice what is already unfolding.",
+      "We plan, analyze, push, and search for the next answer. Yet some of our most meaningful insights arrive when we become quiet—while walking, reflecting, or simply allowing our attention to settle.",
+      "In those moments, an idea may arise, a direction may become clearer, or we may recognize a next step that wasn't visible while we were trying to force an outcome.",
+      "I think of this as a cooperative dance with life: we become still enough to notice what draws our interest, take an inspired and considered step, observe how life responds, and remain open to what that response reveals.",
+      "This is not a promise that every impulse is guidance or that practical judgment is unnecessary. We can listen inwardly and still examine our options, consider consequences, and take responsibility for our choices.",
+      "The invitation is to balance effort with openness. Instead of insisting that the entire path reveal itself now, what if we became attentive to the next reasonable step?",
+      "What might you notice if you allowed a little more quiet, trust, and room for life to surprise you?"
+    ],
+  },
+  {
+    subject: "Love. Investigate. Venture. Enjoy. — Bringing the journey together",
+    heading: "L.I.V.E.",
+    paragraphs: [
+      "We've arrived at the point where the three books come together.",
+      "Understanding External Reflections invites us to investigate how we interpret and experience life. Abundance Abounds invites us to move beyond understanding and experience abundance as part of living. Finding Greatest Joy explores the internal shift that allows us to participate in life with greater freedom, trust, and joy.",
+      "And this brings us back to the philosophy that sparked the first book: L.I.V.E. — Love. Investigate. Venture. Enjoy.",
+      "Love the life you are experiencing. Investigate what you believe, what you feel, and what might be possible. Venture toward what inspires your curiosity. Enjoy the experience—not only the destination you hope to reach.",
+      "L.I.V.E. isn't a formula to follow perfectly. It is a reminder to remain engaged with life: to be open, to explore, to take thoughtful action, and to appreciate the unfolding.",
+      "You don't have to finish a book, solve every question, or reach a final destination to begin living this way. The next moment is already an opportunity to participate.",
+      "Thank you for allowing me to share this journey with you. I hope the books give you ideas to investigate, perspectives to consider, and questions that continue to unfold in your own experience.",
+      "If you'd like to explore the complete Conversations With My Inner Being trilogy, you'll find all three books together here."
     ],
   },
 ] as const;
 
 function createUnsubscribeToken(email: string) {
   if (!unsubscribeSecret) {
-    throw new Error(
-      "EMAIL_UNSUBSCRIBE_SECRET is not configured."
-    );
+    throw new Error("EMAIL_UNSUBSCRIBE_SECRET is not configured.");
   }
 
   return createHmac("sha256", unsubscribeSecret)
@@ -130,10 +136,7 @@ function createUnsubscribeToken(email: string) {
 export function createUnsubscribeUrl(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
   const token = createUnsubscribeToken(normalizedEmail);
-  const url = new URL(
-    "/book-launch/unsubscribe",
-    SITE_URL
-  );
+  const url = new URL("/book-launch/unsubscribe", SITE_URL);
 
   url.searchParams.set("email", normalizedEmail);
   url.searchParams.set("token", token);
@@ -141,14 +144,8 @@ export function createUnsubscribeUrl(email: string) {
   return url.toString();
 }
 
-export function verifyUnsubscribeToken(
-  email: string,
-  token: string
-) {
-  if (
-    !unsubscribeSecret ||
-    !/^[a-f0-9]{64}$/i.test(token)
-  ) {
+export function verifyUnsubscribeToken(email: string, token: string) {
+  if (!unsubscribeSecret || !/^[a-f0-9]{64}$/i.test(token)) {
     return false;
   }
 
@@ -182,33 +179,18 @@ export function renderSequenceEmail(
   const message = BOOK_LAUNCH_EMAILS[step];
 
   if (!message) {
-    throw new Error(
-      `Invalid book launch email step: ${step}`
-    );
+    throw new Error(`Invalid book launch email step: ${step}`);
   }
 
-  const buttonLabel =
-    step === 4
-      ? "Get Your Copy — $7.99"
-      : step <= 1
-        ? "Discover the Book"
-        : "Explore the Book";
-
   const safeName = escapeHtml(name);
-
   const paragraphs = message.paragraphs
-    .map(
-      (paragraph) =>
-        `<p style="margin:0 0 18px">${escapeHtml(paragraph)}</p>`
-    )
+    .map((paragraph) => `<p style="margin:0 0 18px">${escapeHtml(paragraph)}</p>`)
     .join("");
-
   const safeUnsubscribeUrl = escapeHtml(unsubscribeUrl);
-  const purchaseUrl = escapeHtml(
-    `${SITE_URL}/book-launch/thank-you`
+  const storefrontUrl = escapeHtml(
+    `${SITE_URL}/conversations-with-my-inner-being`
   );
   const safeHeading = escapeHtml(message.heading);
-  const safeButtonLabel = escapeHtml(buttonLabel);
 
   return `
     <div style="font-family:Arial,sans-serif;line-height:1.8;color:#243447;max-width:620px;margin:0 auto;padding:24px">
@@ -216,33 +198,24 @@ export function renderSequenceEmail(
         <p style="color:#d6b56d;letter-spacing:2px;font-size:12px;margin:0 0 10px">
           AWAKENED PERSPECTIVE PRESS
         </p>
-        <h1 style="color:#ffffff;font-size:27px;margin:0">
-          ${safeHeading}
-        </h1>
+        <h1 style="color:#ffffff;font-size:27px;margin:0">${safeHeading}</h1>
       </div>
-
       <div style="border:1px solid #e5e7eb;border-top:0;padding:28px 24px;border-radius:0 0 8px 8px">
         <p>Hi ${safeName},</p>
-
         ${paragraphs}
-
         <p style="margin:28px 0;text-align:center">
-          <a href="${purchaseUrl}"
-             style="display:inline-block;background:#102a43;color:#ffffff;text-decoration:none;padding:13px 22px;border-radius:5px;font-weight:bold">
-            ${safeButtonLabel}
+          <a href="${storefrontUrl}" style="display:inline-block;background:#102a43;color:#ffffff;text-decoration:none;padding:13px 22px;border-radius:5px;font-weight:bold">
+            Explore the Trilogy
           </a>
         </p>
-
         <p style="margin-top:28px">
           Warm regards,<br />
           <strong>Gary Walker</strong><br />
           Awakened Perspective Press
         </p>
-
         <hr style="border:0;border-top:1px solid #e5e7eb;margin:28px 0 16px" />
-
         <p style="font-size:12px;color:#6b7280">
-          You're receiving these messages because you requested book launch updates from Awakened Perspective Press.
+          You're receiving these reflections because you requested the free eBook and agreed to receive occasional reflections and trilogy updates.
           <a href="${safeUnsubscribeUrl}" style="color:#6b7280">Unsubscribe from these emails</a>.
         </p>
       </div>
@@ -268,9 +241,7 @@ export async function sendSequenceEmail({
   const message = BOOK_LAUNCH_EMAILS[step];
 
   if (!message) {
-    throw new Error(
-      `Invalid book launch email step: ${step}`
-    );
+    throw new Error(`Invalid book launch email step: ${step}`);
   }
 
   const unsubscribeUrl = createUnsubscribeUrl(email);
@@ -281,10 +252,6 @@ export async function sendSequenceEmail({
     to: [email],
     replyTo: REPLY_TO,
     subject: message.subject,
-    html: renderSequenceEmail(
-      name,
-      step,
-      unsubscribeUrl
-    ),
+    html: renderSequenceEmail(name, step, unsubscribeUrl),
   });
 }
