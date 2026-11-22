@@ -13,7 +13,7 @@ const SITE_URL = (
 const EBOOK_URL =
   `${SITE_URL}/downloads/understanding-external-reflections-6x9.pdf`;
 
-const FOLLOW_UP_DELAY_MS = 48 * 60 * 60 * 1000;
+const FOLLOW_UP_DELAY_MS = 3 * 24 * 60 * 60 * 1000;
 
 function redirectToReaderWelcome(origin: string, error?: string) {
   const url = new URL(
@@ -88,7 +88,7 @@ export async function POST(request: Request) {
           consent: true,
           consentedAt: now,
           source: "conversations-with-my-inner-being",
-          sequenceStep: 1,
+          sequenceStep: 0,
           nextEmailAt,
         },
       });
@@ -106,7 +106,7 @@ export async function POST(request: Request) {
           // restart the follow-up sequence after this new opt-in.
           ...(existing.consent && !existing.unsubscribedAt
             ? {}
-            : { sequenceStep: 1, nextEmailAt }),
+            : { sequenceStep: 0, nextEmailAt }),
         },
       });
     }
