@@ -8,7 +8,15 @@ export const maxDuration = 60;
 
 const BATCH_SIZE = 25;
 const RETRY_DELAY_MS = 10 * 60 * 1000;
-const NEXT_EMAIL_DELAY_MS = 24 * 60 * 60 * 1000;
+const NEXT_EMAIL_DELAY_BY_STEP_MS = [
+  3 * 24 * 60 * 60 * 1000, // Day 6 after Day 3 email
+  3 * 24 * 60 * 60 * 1000, // Day 9
+  3 * 24 * 60 * 60 * 1000, // Day 12
+  2 * 24 * 60 * 60 * 1000, // Day 14
+  2 * 24 * 60 * 60 * 1000, // Day 16
+  2 * 24 * 60 * 60 * 1000, // Day 18
+  3 * 24 * 60 * 60 * 1000, // Day 21
+] as const;
 
 type ProcessingResults = {
   checked: number;
@@ -50,7 +58,7 @@ export async function GET(request: Request) {
         consent: true,
         unsubscribedAt: null,
         nextEmailAt: { lte: now },
-        sequenceStep: { gte: 0, lt: 5 },
+        sequenceStep: { gte: 0, lt: 8 },
       },
       orderBy: { nextEmailAt: "asc" },
       take: BATCH_SIZE,
@@ -121,7 +129,7 @@ export async function GET(request: Request) {
               nextEmailAt: claimUntil,
             },
             data: {
-              sequenceStep: 5,
+              sequenceStep: 8,
               nextEmailAt: null,
             },
           });
@@ -230,9 +238,9 @@ export async function GET(request: Request) {
           data: {
             sequenceStep: nextStep,
             nextEmailAt:
-              nextStep < 5
+              nextStep < 8
                 ? new Date(
-                    Date.now() + NEXT_EMAIL_DELAY_MS
+                    Date.now() + NEXT_EMAIL_DELAY_BY_STEP_MS[reader.sequenceStep]
                   )
                 : null,
           },
